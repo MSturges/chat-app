@@ -8,7 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import AppNavigator from "./navigation/AppNavigator";
 
 const httpLink = new HttpLink({
-  uri: "http://hiltonserver.herokuapp.com/graphql"
+  uri: "http://localhost:8080"
 });
 
 const client = new ApolloClient({

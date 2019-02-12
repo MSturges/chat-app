@@ -17,14 +17,7 @@ const Footer = ({ theme }) => {
         />
         <Text style={s.text}>Hotels</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={Actions.reservations} style={s.tabs}>
-        <MaterialCommunityIcons
-          name="briefcase-check"
-          size={40}
-          color={theme.footerIcon}
-        />
-        <Text style={s.text}>Reservations</Text>
-      </TouchableOpacity>
+
       <TouchableOpacity onPress={Actions.settings} style={s.tabs}>
         <MaterialCommunityIcons
           name="settings"
@@ -36,15 +29,6 @@ const Footer = ({ theme }) => {
     </SafeAreaView>
   );
 };
-
-// <TouchableOpacity onPress={Actions.watchlist} style={s.tabs}>
-// <MaterialCommunityIcons
-//   name="glasses"
-//   size={40}
-//   color={theme.footerIcon}
-// />
-//   <Text style={s.text}>WATCHLIST</Text>
-// </TouchableOpacity>
 
 const styles = theme =>
   StyleSheet.create({

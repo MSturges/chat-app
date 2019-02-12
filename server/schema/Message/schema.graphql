@@ -1,0 +1,14 @@
+type Message {
+  id: Int! # unique id for message
+  to: Group! # group message was sent in
+  from: User! # user who sent the message
+  text: String! # message text
+  createdAt: Date! # when message was created
+}
+
+type Query {
+  # Return messages sent by a user via userId
+  # ... or ...
+  # Return messages sent to a group via groupId
+  messages(groupId: Int, userId: Int): [Message]
+}

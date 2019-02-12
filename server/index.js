@@ -1,12 +1,8 @@
-import { ApolloServer, gql } from "apollo-server";
+import { ApolloServer } from "apollo-server";
+const schema = require("./schema");
+
 const PORT = 8080;
-// basic schema
-const typeDefs = gql`
-  type Query {
-    testString: String
-  }
-`;
-const server = new ApolloServer({ typeDefs, mocks: true });
+const server = new ApolloServer(schema);
 server
   .listen({ port: PORT })
   .then(({ url }) => console.log(`🚀 Server ready at ${url}`));

@@ -1,0 +1,11 @@
+type Group {
+  id: Int! # unique id for the group
+  name: String # name of the group
+  users: [User]! # users in the group
+  messages: [Message] # messages sent to the group
+}
+
+type Query {
+  # Return a group by its id -- must supply an id to query
+  group(id: Int!): Group
+}

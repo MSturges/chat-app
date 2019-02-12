@@ -1,0 +1,13 @@
+type User {
+  id: Int! # unique id for the user
+  email: String! # we will also require a unique email per user
+  username: String # this is the name we'll show other users
+  messages: [Message] # messages sent by user
+  groups: [Group] # groups the user belongs to
+  friends: [User] # user's friends/contacts
+}
+
+type Query {
+  # Return a user by their email or id
+  user(email: String, id: Int): User
+}
