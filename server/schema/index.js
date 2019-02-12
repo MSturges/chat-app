@@ -1,10 +1,10 @@
 const { importSchema } = require("graphql-import");
-// const graphql = require("graphql");
-// const { GraphQLSchema } = graphql;
-// const merge = require("lodash/merge");
-import { mocks } from "./mocks";
+
+const merge = require("lodash/merge");
+
+const { resolvers } = require("./resolvers");
 
 module.exports = {
   typeDefs: importSchema("./schema/schema.graphql"),
-  mocks
+  resolvers
 };
