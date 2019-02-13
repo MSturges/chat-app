@@ -8,7 +8,7 @@ import { withTheme } from "../../contexts/ThemeContext";
 
 class Group extends Component {
   render() {
-    const { id, name } = this.props.group;
+    const { id, name } = this.props.group.item;
     const goToMessagesSceen = () => Actions.messages({ id, title: name });
     const s = styles(this.props.theme);
 

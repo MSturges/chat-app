@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { FlatList, StyleSheet, ActivityIndicator, View } from "react-native";
-import { _ } from "lodash";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import Layout from "../../components/Layout";
-import Group from "./Group";
+import GroupList from "./GroupList";
 
 class Groups extends Component {
   keyExtractor = item => item.id.toString();
@@ -24,15 +23,9 @@ class Groups extends Component {
               </View>
             );
           }
-
           return (
             <Layout>
-              <FlatList
-                data={data.user.groups}
-                keyExtractor={this.keyExtractor}
-                renderItem={({ item }) => <Group group={item} />}
-                style={s.list}
-              />
+              <GroupList data={data} />
             </Layout>
           );
         }}
@@ -60,11 +53,6 @@ const styles = theme =>
     container: {
       padding: 16,
       backgroundColor: theme.primaryOne
-    },
-    list: {
-      alignSelf: "stretch",
-      backgroundColor: theme.primaryOne,
-      zIndex: 1
     },
     loading: {
       justifyContent: "center",
