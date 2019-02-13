@@ -21,7 +21,7 @@ const themes = {
     // Specific components
     // -------------------
     // Layout Footer
-    footerTopBorder: "#ECEFF1",
+    footerTopBorder: "#000000",
     footerBackground: "#FFFFFF",
     footerText: "#000000",
     footerIcon: "#000000"

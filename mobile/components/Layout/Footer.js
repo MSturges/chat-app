@@ -9,15 +9,22 @@ const Footer = ({ theme }) => {
 
   return (
     <SafeAreaView style={s.container}>
-      <TouchableOpacity onPress={Actions.hotels} style={s.tabs}>
+      <TouchableOpacity onPress={Actions.groups} style={s.tabs}>
         <MaterialCommunityIcons
           name="hotel"
           size={40}
           color={theme.footerIcon}
         />
-        <Text style={s.text}>Hotels</Text>
+        <Text style={s.text}>Groups</Text>
       </TouchableOpacity>
-
+      <TouchableOpacity onPress={Actions.messages} style={s.tabs}>
+        <MaterialCommunityIcons
+          name="hotel"
+          size={40}
+          color={theme.footerIcon}
+        />
+        <Text style={s.text}>Messages</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={Actions.settings} style={s.tabs}>
         <MaterialCommunityIcons
           name="settings"
