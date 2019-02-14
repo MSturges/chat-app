@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, Text, View } from "react-native";
+import gql from "graphql-tag";
 
 class Message extends PureComponent {
   render() {
@@ -24,18 +25,6 @@ class Message extends PureComponent {
     );
   }
 }
-
-Message.propTypes = {
-  color: PropTypes.string.isRequired,
-  message: PropTypes.shape({
-    createdAt: PropTypes.string.isRequired,
-    from: PropTypes.shape({
-      username: PropTypes.string.isRequired
-    }),
-    text: PropTypes.string.isRequired
-  }).isRequired,
-  isCurrentUser: PropTypes.bool.isRequired
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -74,4 +63,31 @@ const styles = StyleSheet.create({
     flex: 0.2
   }
 });
+
+export const FRAGMENT = gql`
+  fragment MessageFragment on Message {
+    id
+    to {
+      id
+    }
+    from {
+      id
+      username
+    }
+    createdAt
+    text
+  }
+`;
+
+Message.propTypes = {
+  color: PropTypes.string.isRequired,
+  message: PropTypes.shape({
+    createdAt: PropTypes.string.isRequired,
+    from: PropTypes.shape({
+      username: PropTypes.string.isRequired
+    }),
+    text: PropTypes.string.isRequired
+  }).isRequired,
+  isCurrentUser: PropTypes.bool.isRequired
+};
 export default Message;

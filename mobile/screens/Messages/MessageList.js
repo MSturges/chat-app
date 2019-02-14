@@ -1,5 +1,5 @@
 import { _ } from "lodash";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import React, { Component } from "react";
 import randomColor from "randomcolor";
 

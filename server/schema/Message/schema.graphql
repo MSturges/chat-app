@@ -12,3 +12,8 @@ type Query {
   # Return messages sent to a group via groupId
   messages(groupId: Int, userId: Int): [Message]
 }
+
+type Mutation {
+  # send a message to a group
+  createMessage(text: String!, userId: Int!, groupId: Int!): Message
+}

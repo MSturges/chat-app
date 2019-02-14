@@ -28,6 +28,15 @@ export const resolvers = {
       });
     }
   },
+  Mutation: {
+    createMessage(_, { text, userId, groupId }) {
+      return Message.create({
+        userId,
+        text,
+        groupId,
+      });
+    },
+  },
   Message: {
     to(message) {
       return message.getGroup();

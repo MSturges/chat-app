@@ -34,11 +34,13 @@ Button.defaultProps = {
 const styles = theme =>
   StyleSheet.create({
     button: {
-      alignSelf: "stretch",
-      backgroundColor: theme.green,
-      borderRadius: 5,
-      height: 60,
-      paddingVertical: 16
+      backgroundColor: theme.black,
+      borderRadius: 16,
+      height: 32,
+      width: 32,
+      alignItems: "center",
+      justifyContent: "center"
+      // paddingVertical: 16
     },
     text: {
       alignSelf: "center",

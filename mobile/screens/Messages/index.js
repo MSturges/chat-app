@@ -1,10 +1,17 @@
-import { StyleSheet, View, ActivityIndicator } from "react-native";
 import React, { Component } from "react";
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  KeyboardAvoidingView
+} from "react-native";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import MessageList from "./MessageList";
+import { FRAGMENT } from "./Message";
+import MessageInput from "./MessageInput";
 
 class Messages extends Component {
   render() {
@@ -22,9 +29,15 @@ class Messages extends Component {
           }
 
           return (
-            <View style={s.container}>
+            <KeyboardAvoidingView
+              behavior={"position"}
+              contentContainerStyle={s.container}
+              keyboardVerticalOffset={64}
+              style={s.container}
+            >
               <MessageList group={data.group} />
-            </View>
+              <MessageInput groupId={id} userId={1} />
+            </KeyboardAvoidingView>
           );
         }}
       </Query>
@@ -42,16 +55,11 @@ const GROUP_QUERY = gql`
         username
       }
       messages {
-        id
-        from {
-          id
-          username
-        }
-        createdAt
-        text
+        ...MessageFragment
       }
     }
   }
+  ${FRAGMENT}
 `;
 
 const styles = theme =>
