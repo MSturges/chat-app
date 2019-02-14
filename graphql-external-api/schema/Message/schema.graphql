@@ -5,7 +5,7 @@ type Message {
   text: String! # message text
   createdAt: Date! # when message was created
 }
-# Relay cursor - the gold standard
+# Relay cursor for paginating messages- the gold standard
 type MessageConnection {
   edges: [MessageEdge]
   pageInfo: PageInfo!
@@ -17,6 +17,13 @@ type MessageEdge {
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
+}
+
+# graphql subscriptions for event based pubsub
+type Subscription {
+  # Subscription fires on every message added
+  # for any of the groups with one of these groupIds
+  messageAdded(userId: Int, groupIds: [Int]): Message
 }
 
 type Query {

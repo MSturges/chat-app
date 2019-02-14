@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Mutation } from "react-apollo";
-import gql from "graphql-tag";
 import { Buffer } from "buffer";
 
-import { FRAGMENT } from "./Message";
 import { withTheme } from "../../contexts/ThemeContext";
 import { Button } from "../../components/common";
+import GROUP_QUERY from "../../graphql/queries/group-query";
+import CREATE_MESSAGE_MUTATION from "../../graphql/mutations/create-message-mutation";
 
 class MessageInput extends Component {
   state = {
@@ -114,39 +114,6 @@ class MessageInput extends Component {
     );
   }
 }
-
-const GROUP_QUERY = gql`
-  query group(
-    $groupId: Int!
-    $first: Int
-    $after: String
-    $last: Int
-    $before: String
-  ) {
-    messages(first: $first, after: $after, last: $last, before: $before) {
-      edges {
-        cursor
-        node {
-          ...MessageFragment
-        }
-      }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-      }
-    }
-  }
-  ${FRAGMENT}
-`;
-
-const CREATE_MESSAGE_MUTATION = gql`
-  mutation createMessage($text: String!, $userId: Int!, $groupId: Int!) {
-    createMessage(text: $text, userId: $userId, groupId: $groupId) {
-      ...MessageFragment
-    }
-  }
-  ${FRAGMENT}
-`;
 
 const styles = StyleSheet.create({
   container: {

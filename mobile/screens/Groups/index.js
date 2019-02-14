@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { StyleSheet, ActivityIndicator, View } from "react-native";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import Layout from "../../components/Layout";
 import GroupList from "./GroupList";
+import USER_QUERY from "../../graphql/queries/user-query";
 
 class Groups extends Component {
   keyExtractor = item => item.id.toString();
@@ -33,20 +33,6 @@ class Groups extends Component {
     );
   }
 }
-
-export const USER_QUERY = gql`
-  query user($id: Int) {
-    user(id: $id) {
-      id
-      email
-      username
-      groups {
-        id
-        name
-      }
-    }
-  }
-`;
 
 const styles = theme =>
   StyleSheet.create({

@@ -2,10 +2,12 @@ import { _ } from "lodash";
 import { FlatList, StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import React, { Component } from "react";
 import randomColor from "randomcolor";
+// import { Subscription } from "react-apollo";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
+// import MESSAGE_ADDED_SUBSCRIPTION from "../../graphql/subscriptions/message-added-subscription";
 
 class MessengerView extends Component {
   constructor(props) {
@@ -20,6 +22,10 @@ class MessengerView extends Component {
       usernameColors,
       refreshing: false
     };
+  }
+
+  componentDidMount() {
+    this.props.subscribeToNewMessages();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -74,7 +80,7 @@ class MessengerView extends Component {
   render() {
     const { theme, group, ITEMS_PER_PAGE } = this.props;
     const s = styles(theme);
-    // console.log("group", group);
+
     return (
       <KeyboardAvoidingView
         behavior={"position"}
@@ -84,21 +90,18 @@ class MessengerView extends Component {
       >
         <FlatList
           inverted
-          // data={group.messages}
           data={group.messages.edges}
           keyExtractor={item => item.node.id.toString()}
           renderItem={this.renderItem}
           ListEmptyComponent={<View />}
           ref={ref => (this.flatList = ref)}
           onEndReached={this.onEndReached}
-
-          // onLayout={() => this.scrollToBottomOfMessagesList()}
         />
         <MessageInput
           groupId={group.id}
           userId={1}
           flatListRef={this.flatList}
-          // scrollToBottomOfMessagesList={this.scrollToBottomOfMessagesList}
+          scrollToBottomOfMessagesList={this.scrollToBottomOfMessagesList}
           ITEMS_PER_PAGE={ITEMS_PER_PAGE}
         />
       </KeyboardAvoidingView>

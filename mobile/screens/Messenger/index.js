@@ -1,16 +1,20 @@
 import React, { Component } from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 import update from "immutability-helper";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import MessengerView from "./MessengerView";
-import { FRAGMENT } from "./Message";
+import GROUP_QUERY from "../../graphql/queries/group-query";
+import MESSAGE_ADDED_SUBSCRIPTION from "../../graphql/subscriptions/message-added-subscription";
 
 const ITEMS_PER_PAGE = 10;
+
 class Messages extends Component {
+  //
+
   render() {
+    // id is groupID
     const { id, theme } = this.props;
     const s = styles(theme);
     return (
@@ -18,7 +22,7 @@ class Messages extends Component {
         query={GROUP_QUERY}
         variables={{ groupId: id, first: ITEMS_PER_PAGE }}
       >
-        {({ data: { group }, loading, fetchMore }) => {
+        {({ data: { group }, loading, fetchMore, subscribeToMore }) => {
           if (loading) {
             return (
               <View style={[s.loading, s.container]}>
@@ -55,11 +59,44 @@ class Messages extends Component {
             });
           };
 
+          const subscribeToNewMessages = () => {
+            console.log("subscribe to group", id);
+            return subscribeToMore({
+              document: MESSAGE_ADDED_SUBSCRIPTION,
+              variables: {
+                userId: 1, // fake the user for now
+                groupIds: [id]
+              },
+              updateQuery: (previousResult, { subscriptionData }) => {
+                const newMessage = subscriptionData.data.messageAdded;
+                return update(previousResult, {
+                  group: {
+                    messages: {
+                      edges: {
+                        $unshift: [
+                          {
+                            __typename: "MessageEdge",
+                            node: newMessage,
+                            cursor: Buffer.from(
+                              newMessage.id.toString()
+                            ).toString("base64")
+                          }
+                        ]
+                      }
+                    }
+                  }
+                });
+              }
+            });
+          };
+
           return (
             <MessengerView
               group={group}
+              groupId={id}
               ITEMS_PER_PAGE={ITEMS_PER_PAGE}
               loadMoreEntries={loadMoreEntries}
+              subscribeToNewMessages={subscribeToNewMessages}
             />
           );
         }}
@@ -67,39 +104,6 @@ class Messages extends Component {
     );
   }
 }
-
-const GROUP_QUERY = gql`
-  query group(
-    $groupId: Int!
-    $first: Int
-    $after: String
-    $last: Int
-    $before: String
-  ) {
-    group(id: $groupId) {
-      id
-      name
-      users {
-        id
-        username
-      }
-
-      messages(first: $first, after: $after, last: $last, before: $before) {
-        edges {
-          cursor
-          node {
-            ...MessageFragment
-          }
-        }
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-      }
-    }
-  }
-  ${FRAGMENT}
-`;
 
 const styles = theme =>
   StyleSheet.create({
