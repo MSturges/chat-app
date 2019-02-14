@@ -6,5 +6,13 @@ const { resolvers } = require("./resolvers");
 
 module.exports = {
   typeDefs: importSchema("./schema/schema.graphql"),
-  resolvers
+  resolvers,
+  formatError: error => {
+    console.log(error);
+    return error;
+  },
+  formatResponse: response => {
+    console.log("response data", response.data);
+    return response;
+  }
 };

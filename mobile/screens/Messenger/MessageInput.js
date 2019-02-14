@@ -32,12 +32,12 @@ class MessageInput extends Component {
         __typename: "Mutation",
         createMessage: {
           __typename: "Message",
-          id: -1, // don't know id yet, but it doesn't matter update prop will figure it out.
-          text, // we know what the text will be
+          id: -1, // don't know id yet, but it doesn't matter
+          text: text, // we know what the text will be
           createdAt: new Date().toISOString(), // the time is now!
           from: {
             __typename: "User",
-            id: 1, // still faking the user
+            id: 1,
             username: "Justyn.Kautzer" // still faking the user
           },
           to: {
@@ -49,14 +49,16 @@ class MessageInput extends Component {
       // Update runs when the result returns from grapbql-external-api
       update: (store, { data: { createMessage } }) => {
         // Read the data from our cache for this query.
+
         const groupData = store.readQuery({
           query: GROUP_QUERY,
           variables: {
-            groupId
+            groupId: groupId
           }
         });
+        // console.log("groupData", groupData);
         // Add our message from the mutation to the end.
-        // groupData.group.messages.unshift(createMessage);
+        groupData.group.messages.unshift(createMessage);
         groupData.group.messages.edges.unshift({
           __typename: "MessageEdge",
           node: createMessage,

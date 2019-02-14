@@ -60,7 +60,6 @@ class Messages extends Component {
           };
 
           const subscribeToNewMessages = () => {
-            console.log("subscribe to group", id);
             return subscribeToMore({
               document: MESSAGE_ADDED_SUBSCRIPTION,
               variables: {
