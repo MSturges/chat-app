@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import { Buffer } from "buffer";
 
 import { FRAGMENT } from "./Message";
 import { withTheme } from "../../contexts/ThemeContext";
@@ -13,9 +14,8 @@ class MessageInput extends Component {
     text: ""
   };
 
-
   send = createMessage => {
-    const { groupId, userId } = this.props;
+    const { groupId, userId, ITEMS_PER_PAGE } = this.props;
     const { text } = this.state;
 
     this.textInput.clear();
@@ -56,12 +56,18 @@ class MessageInput extends Component {
           }
         });
         // Add our message from the mutation to the end.
-        groupData.group.messages.unshift(createMessage);
+        // groupData.group.messages.unshift(createMessage);
+        groupData.group.messages.edges.unshift({
+          __typename: "MessageEdge",
+          node: createMessage,
+          cursor: Buffer.from(createMessage.id.toString()).toString("base64")
+        });
         // Write our data back to the cache.
         store.writeQuery({
           query: GROUP_QUERY,
           variables: {
-            groupId
+            groupId,
+            first: ITEMS_PER_PAGE
           },
           data: groupData
         });
@@ -110,16 +116,23 @@ class MessageInput extends Component {
 }
 
 const GROUP_QUERY = gql`
-  query group($groupId: Int!) {
-    group(id: $groupId) {
-      id
-      name
-      users {
-        id
-        username
+  query group(
+    $groupId: Int!
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
+    messages(first: $first, after: $after, last: $last, before: $before) {
+      edges {
+        cursor
+        node {
+          ...MessageFragment
+        }
       }
-      messages {
-        ...MessageFragment
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
       }
     }
   }

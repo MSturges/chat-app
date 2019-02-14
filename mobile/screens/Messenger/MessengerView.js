@@ -7,7 +7,7 @@ import { withTheme } from "../../contexts/ThemeContext";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
 
-class MessageList extends Component {
+class MessengerView extends Component {
   constructor(props) {
     super(props);
     const usernameColors = {};
@@ -17,12 +17,9 @@ class MessageList extends Component {
       });
     }
     this.state = {
-      usernameColors
+      usernameColors,
+      refreshing: false
     };
-  }
-
-  componentDidMount() {
-    this.scrollToBottomOfMessagesList();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,25 +39,42 @@ class MessageList extends Component {
     }
   }
 
-  renderItem = message => {
+  renderItem = ({ item: edge }) => {
+    const message = edge.node;
     return (
       <Message
-        color={this.state.usernameColors[message.item.from.username]}
-        isCurrentUser={message.item.from.id === 1} // for now until we implement auth
-        message={message.item}
+        color={this.state.usernameColors[message.from.username]}
+        isCurrentUser={message.from.id === 1} // for now until we implement auth
+        message={message}
       />
     );
   };
 
   scrollToBottomOfMessagesList = () => {
-    console.log("scroll");
-    this.flatList.scrollToEnd({ animated: true });
+    this.flatList.scrollToIndex({ index: 0, animated: true });
+  };
+
+  onEndReached = () => {
+    // on reach end load more entries
+    if (
+      !this.state.loadingMoreEntries &&
+      this.props.group.messages.pageInfo.hasNextPage
+    ) {
+      this.setState({
+        loadingMoreEntries: true
+      });
+      this.props.loadMoreEntries().then(() => {
+        this.setState({
+          loadingMoreEntries: false
+        });
+      });
+    }
   };
 
   render() {
-    const { theme, group } = this.props;
+    const { theme, group, ITEMS_PER_PAGE } = this.props;
     const s = styles(theme);
-
+    // console.log("group", group);
     return (
       <KeyboardAvoidingView
         behavior={"position"}
@@ -69,18 +83,23 @@ class MessageList extends Component {
         style={s.container}
       >
         <FlatList
-          data={group.messages.slice().reverse()}
-          keyExtractor={message => message.id.toString()}
+          inverted
+          // data={group.messages}
+          data={group.messages.edges}
+          keyExtractor={item => item.node.id.toString()}
           renderItem={this.renderItem}
           ListEmptyComponent={<View />}
           ref={ref => (this.flatList = ref)}
+          onEndReached={this.onEndReached}
+
           // onLayout={() => this.scrollToBottomOfMessagesList()}
         />
         <MessageInput
           groupId={group.id}
           userId={1}
           flatListRef={this.flatList}
-          scrollToBottomOfMessagesList={this.scrollToBottomOfMessagesList}
+          // scrollToBottomOfMessagesList={this.scrollToBottomOfMessagesList}
+          ITEMS_PER_PAGE={ITEMS_PER_PAGE}
         />
       </KeyboardAvoidingView>
     );
@@ -97,4 +116,4 @@ const styles = theme =>
     }
   });
 
-export default withTheme(MessageList);
+export default withTheme(MessengerView);

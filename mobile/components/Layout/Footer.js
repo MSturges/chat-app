@@ -17,14 +17,6 @@ const Footer = ({ theme }) => {
         />
         <Text style={s.text}>Groups</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={Actions.messages} style={s.tabs}>
-        <MaterialCommunityIcons
-          name="hotel"
-          size={40}
-          color={theme.footerIcon}
-        />
-        <Text style={s.text}>Messages</Text>
-      </TouchableOpacity>
       <TouchableOpacity onPress={Actions.settings} style={s.tabs}>
         <MaterialCommunityIcons
           name="settings"

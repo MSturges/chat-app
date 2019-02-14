@@ -5,6 +5,19 @@ type Message {
   text: String! # message text
   createdAt: Date! # when message was created
 }
+# Relay cursor - the gold standard
+type MessageConnection {
+  edges: [MessageEdge]
+  pageInfo: PageInfo!
+}
+type MessageEdge {
+  cursor: String!
+  node: Message!
+}
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
 
 type Query {
   # Return messages sent by a user via userId
