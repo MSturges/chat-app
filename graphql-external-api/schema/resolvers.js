@@ -33,9 +33,9 @@ export const resolvers = {
       return Message.create({
         userId,
         text,
-        groupId,
+        groupId
       });
-    },
+    }
   },
   Message: {
     to(message) {

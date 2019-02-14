@@ -11,7 +11,6 @@ import gql from "graphql-tag";
 import { withTheme } from "../../contexts/ThemeContext";
 import MessageList from "./MessageList";
 import { FRAGMENT } from "./Message";
-import MessageInput from "./MessageInput";
 
 class Messages extends Component {
   render() {
@@ -29,15 +28,10 @@ class Messages extends Component {
           }
 
           return (
-            <KeyboardAvoidingView
-              behavior={"position"}
-              contentContainerStyle={s.container}
-              keyboardVerticalOffset={64}
-              style={s.container}
-            >
-              <MessageList group={data.group} />
-              <MessageInput groupId={id} userId={1} />
-            </KeyboardAvoidingView>
+            <MessageList
+              group={data.group}
+              setMessageListRef={this.setMessageListRef}
+            />
           );
         }}
       </Query>

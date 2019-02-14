@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FlatList, StyleSheet, ActivityIndicator, View } from "react-native";
+import { StyleSheet, ActivityIndicator, View } from "react-native";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 

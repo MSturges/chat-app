@@ -13,25 +13,66 @@ class MessageInput extends Component {
     text: ""
   };
 
+
   send = createMessage => {
     const { groupId, userId } = this.props;
-
-    createMessage({
-      variables: {
-        text: this.state.text,
-        groupId: groupId,
-        userId: userId
-      }
-    })
-      .then(res => {
-        console.log("res", res);
-      })
-      .catch(err => {
-        console.log("error", err);
-      });
+    const { text } = this.state;
 
     this.textInput.clear();
     this.textInput.blur();
+
+    createMessage({
+      variables: {
+        text: text,
+        groupId: groupId,
+        userId: userId
+      },
+      // Fake data in our cache before waiting a response from grapbql-external-api
+      optimisticResponse: {
+        __typename: "Mutation",
+        createMessage: {
+          __typename: "Message",
+          id: -1, // don't know id yet, but it doesn't matter update prop will figure it out.
+          text, // we know what the text will be
+          createdAt: new Date().toISOString(), // the time is now!
+          from: {
+            __typename: "User",
+            id: 1, // still faking the user
+            username: "Justyn.Kautzer" // still faking the user
+          },
+          to: {
+            __typename: "Group",
+            id: groupId
+          }
+        }
+      },
+      // Update runs when the result returns from grapbql-external-api
+      update: (store, { data: { createMessage } }) => {
+        // Read the data from our cache for this query.
+        const groupData = store.readQuery({
+          query: GROUP_QUERY,
+          variables: {
+            groupId
+          }
+        });
+        // Add our message from the mutation to the end.
+        groupData.group.messages.unshift(createMessage);
+        // Write our data back to the cache.
+        store.writeQuery({
+          query: GROUP_QUERY,
+          variables: {
+            groupId
+          },
+          data: groupData
+        });
+      }
+    })
+      .then(() => {
+        this.props.scrollToBottomOfMessagesList();
+      })
+      .catch(error => {
+        console.log("Something went wrong sending message", error);
+      });
   };
 
   render() {
@@ -68,14 +109,6 @@ class MessageInput extends Component {
   }
 }
 
-const CREATE_MESSAGE_MUTATION = gql`
-  mutation createMessage($text: String!, $userId: Int!, $groupId: Int!) {
-    createMessage(text: $text, userId: $userId, groupId: $groupId) {
-      id
-    }
-  }
-`;
-
 const GROUP_QUERY = gql`
   query group($groupId: Int!) {
     group(id: $groupId) {
@@ -86,10 +119,20 @@ const GROUP_QUERY = gql`
         username
       }
       messages {
-        id
+        ...MessageFragment
       }
     }
   }
+  ${FRAGMENT}
+`;
+
+const CREATE_MESSAGE_MUTATION = gql`
+  mutation createMessage($text: String!, $userId: Int!, $groupId: Int!) {
+    createMessage(text: $text, userId: $userId, groupId: $groupId) {
+      ...MessageFragment
+    }
+  }
+  ${FRAGMENT}
 `;
 
 const styles = StyleSheet.create({

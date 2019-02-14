@@ -5,10 +5,9 @@ import randomColor from "randomcolor";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import Message from "./Message";
+import MessageInput from "./MessageInput";
 
 class MessageList extends Component {
-  //
-
   constructor(props) {
     super(props);
     const usernameColors = {};
@@ -20,6 +19,10 @@ class MessageList extends Component {
     this.state = {
       usernameColors
     };
+  }
+
+  componentDidMount() {
+    this.scrollToBottomOfMessagesList();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -49,19 +52,37 @@ class MessageList extends Component {
     );
   };
 
+  scrollToBottomOfMessagesList = () => {
+    console.log("scroll");
+    this.flatList.scrollToEnd({ animated: true });
+  };
+
   render() {
     const { theme, group } = this.props;
     const s = styles(theme);
 
     return (
-      <View style={s.container}>
+      <KeyboardAvoidingView
+        behavior={"position"}
+        contentContainerStyle={s.container}
+        keyboardVerticalOffset={64}
+        style={s.container}
+      >
         <FlatList
           data={group.messages.slice().reverse()}
           keyExtractor={message => message.id.toString()}
           renderItem={this.renderItem}
           ListEmptyComponent={<View />}
+          ref={ref => (this.flatList = ref)}
+          // onLayout={() => this.scrollToBottomOfMessagesList()}
         />
-      </View>
+        <MessageInput
+          groupId={group.id}
+          userId={1}
+          flatListRef={this.flatList}
+          scrollToBottomOfMessagesList={this.scrollToBottomOfMessagesList}
+        />
+      </KeyboardAvoidingView>
     );
   }
 }
