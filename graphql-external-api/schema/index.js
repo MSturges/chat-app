@@ -5,7 +5,7 @@ const merge = require("lodash/merge");
 const { resolvers } = require("./resolvers");
 
 module.exports = {
-  typeDefs: importSchema("./schema/schema.graphql"),
+  typeDefs: importSchema("./schema/rootSchema.graphql"),
   resolvers,
   formatError: error => {
     console.log(error);
