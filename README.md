@@ -7,7 +7,7 @@ Cool Features:
 
 To Start: 
 
-cd graphql-external-api 
+cd graphql-api 
 npm install
 npm start
 
