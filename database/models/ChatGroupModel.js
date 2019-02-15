@@ -10,13 +10,10 @@ const ChatGroupSchema = new Schema({
     }
   ],
   messages: [
-    new Schema({
-      roomName: String,
-      available: Boolean,
-      price: Number,
-      beds: Number,
-      baths: Number
-    })
+    {
+      type: Schema.Types.ObjectId,
+      ref: "message"
+    }
   ]
 });
 
