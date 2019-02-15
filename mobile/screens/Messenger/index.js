@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { Query } from "react-apollo";
 import update from "immutability-helper";
+import { Buffer } from "buffer";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import MessengerView from "./MessengerView";
@@ -59,12 +60,12 @@ class Messages extends Component {
             });
           };
 
-          const subscribeToNewMessages = () => {
-            return subscribeToMore({
+          const subscribeToNewMessages = () =>
+            subscribeToMore({
               document: MESSAGE_ADDED_SUBSCRIPTION,
               variables: {
-                userId: 1, // fake the user for now
-                groupIds: [id]
+                groupIds: 1,
+                userId: 1
               },
               updateQuery: (previousResult, { subscriptionData }) => {
                 const newMessage = subscriptionData.data.messageAdded;
@@ -87,7 +88,6 @@ class Messages extends Component {
                 });
               }
             });
-          };
 
           return (
             <MessengerView

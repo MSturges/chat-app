@@ -1,8 +1,12 @@
 # import * from "./Scalars/schema.graphql"
-# import Query.* from "./Group/schema.graphql"
+
+
 # import Query.* from "./Message/schema.graphql"
 # import Mutation.* from "./Message/schema.graphql"
 # import Subscription.* from "./Message/schema.graphql"
+
+# import Query.* from "./Group/schema.graphql"
+
 # import Query.* from "./User/schema.graphql"
 
 

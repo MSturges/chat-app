@@ -50,15 +50,15 @@ class MessageInput extends Component {
       update: (store, { data: { createMessage } }) => {
         // Read the data from our cache for this query.
 
-        const groupData = store.readQuery({
+        groupData = store.readQuery({
           query: GROUP_QUERY,
           variables: {
-            groupId: groupId
+            groupId: groupId,
+            first: ITEMS_PER_PAGE
           }
         });
-        // console.log("groupData", groupData);
+
         // Add our message from the mutation to the end.
-        groupData.group.messages.unshift(createMessage);
         groupData.group.messages.edges.unshift({
           __typename: "MessageEdge",
           node: createMessage,
@@ -68,14 +68,14 @@ class MessageInput extends Component {
         store.writeQuery({
           query: GROUP_QUERY,
           variables: {
-            groupId,
+            groupId: groupId,
             first: ITEMS_PER_PAGE
           },
           data: groupData
         });
       }
     })
-      .then(() => {
+      .then(res => {
         this.props.scrollToBottomOfMessagesList();
       })
       .catch(error => {
@@ -96,7 +96,6 @@ class MessageInput extends Component {
                   }}
                   onChangeText={text => this.setState({ text })}
                   style={styles.input}
-                  value={this.state.text}
                   placeholder="Type your message here!"
                 />
               </View>

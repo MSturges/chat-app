@@ -114,6 +114,9 @@ export const resolvers = {
       subscribe: withFilter(
         () => pubsub.asyncIterator(MESSAGE_ADDED_TOPIC),
         (payload, args) => {
+          // console.log("MESSAGE_ADDED_TOPIC,", MESSAGE_ADDED_TOPIC);
+          console.log("payload id:", payload.messageAdded.userId);
+          console.log("args", args.userId);
           return Boolean(
             args.groupIds &&
               ~args.groupIds.indexOf(payload.messageAdded.groupId) &&
