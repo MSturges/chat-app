@@ -1,4 +1,4 @@
-Mobile Chat App react-native
+react-native chat application with apollo-server backend.
 
 Cool Features:
 - Relay Pagination for chat messages
