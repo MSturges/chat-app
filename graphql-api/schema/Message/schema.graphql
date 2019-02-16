@@ -1,39 +1,19 @@
 type Message {
-  id: Int! # unique id for message
-  to: Group! # group message was sent in
-  from: User! # user who sent the message
-  text: String! # message text
+  id: ID! # unique id for message
+  to: ChatGroup! # group message was sent in
+  fromUser: User! # user who sent the message
+  message: String! # message text
   createdAt: Date! # when message was created
-}
-# Relay cursor for paginating messages- the gold standard
-type MessageConnection {
-  edges: [MessageEdge]
-  pageInfo: PageInfo!
-}
-type MessageEdge {
-  cursor: String!
-  node: Message!
-}
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
 }
 
 # graphql subscriptions for event based pubsub
-type Subscription {
-  # Subscription fires on every message added
-  # for any of the groups with one of these groupIds
-  messageAdded(userId: Int, groupIds: [Int]): Message
-}
-
-type Query {
-  # Return messages sent by a user via userId
-  # ... or ...
-  # Return messages sent to a group via groupId
-  messages(groupId: Int, userId: Int): [Message]
-}
+# type Subscription {
+#   # Subscription fires on every message added
+#   # for any of the groups with one of these groupIds
+#   messageAdded(userId: Int, groupIds: [Int]): Message
+# }
 
 type Mutation {
   # send a message to a group
-  createMessage(text: String!, userId: Int!, groupId: Int!): Message
+  createMessage(message: String!, userId: ID!, groupId: ID!): Message
 }

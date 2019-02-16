@@ -1,0 +1,5 @@
+# import * from "./Scalars/schema.graphql"
+
+# import Query.*, Mutation.* from "./User/schema.graphql"
+# import Query.*, Mutation.* from "./ChatGroup/schema.graphql"
+# import Mutation.* from "./Message/schema.graphql"

@@ -6,14 +6,19 @@ const MessageSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "chatGroup"
   },
-  from: {
+  fromUser: {
     type: Schema.Types.ObjectId,
     ref: "user"
   },
-  message: String,
-  createdAt: Date
+  message: {
+    type: String
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-const MessageModel = mongoose.model("group", MessageSchema);
+const MessageModel = mongoose.model("message", MessageSchema);
 
 module.exports = MessageModel;
