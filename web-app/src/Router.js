@@ -32,6 +32,14 @@ const Notifications = asyncComponent({
     resolve: () => import('./components/Notifications/Notifications')
 });
 
+const SignIn = asyncComponent({
+    resolve: () => import('./components/SignIn/SignIn')
+});
+
+const SignUp = asyncComponent({
+    resolve: () => import('./components/SignUp/SignUp')
+});
+
 class Router extends PureComponent {
     render() {
         let routes = (
@@ -43,6 +51,8 @@ class Router extends PureComponent {
                 <Route exact path='/profile' component={ Profile } />
                 <Route exact path='/messages' component={ Messages } />
                 <Route exact path='/notifications' component={ Notifications } />
+                <Route exact path='/sign-in' component={ SignIn } />
+                <Route exact path='/sign-up' component={ SignUp } />
                 <Redirect from='*' to='/' />
             </Switch>
         );

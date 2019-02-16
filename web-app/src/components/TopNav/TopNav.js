@@ -9,9 +9,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
+import ViewIcon from '@material-ui/icons/Visibility';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import PersonIcon from '@material-ui/icons/Person';
 import MailIcon from '@material-ui/icons/Mail';
+import SignInIcon from '@material-ui/icons/Fingerprint';
+import SignUpIcon from '@material-ui/icons/CheckCircle';
+import SignOutIcon from '@material-ui/icons/ExitToApp';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
@@ -85,15 +90,20 @@ const styles = theme => ({
 class PrimarySearchAppBar extends React.Component {
     state = {
         anchorEl: null,
+        authAnchorEl: null,
         mobileMoreAnchorEl: null,
     };
 
-    handleProfileMenuOpen = event => {
+    handleNotificationsMenuOpen = event => {
         this.setState({ anchorEl: event.currentTarget });
     };
 
+    handleAuthMenuOpen = event => {
+        this.setState({ authAnchorEl: event.currentTarget });
+    };
+
     handleMenuClose = () => {
-        this.setState({ anchorEl: null });
+        this.setState({ anchorEl: null, authAnchorEl: null });
         this.handleMobileMenuClose();
     };
 
@@ -106,20 +116,64 @@ class PrimarySearchAppBar extends React.Component {
     };
 
     render() {
-        const { anchorEl, mobileMoreAnchorEl } = this.state;
+        const { anchorEl, authAnchorEl, mobileMoreAnchorEl } = this.state;
         const { classes } = this.props;
-        const isMenuOpen = Boolean(anchorEl);
+        const isNotificationsMenuOpen = Boolean(anchorEl);
+        const isAuthMenuOpen = Boolean(authAnchorEl);
         const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
         const renderMenu = (
             <Menu anchorEl={ anchorEl }
                   anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  open={ isMenuOpen }
+                  open={ isNotificationsMenuOpen }
                   onClose={ this.handleMenuClose }>
                 <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                              this.props.history.push('/notifications');
+                              this.handleMenuClose();
+                          }}>
+                    <ViewIcon /> &nbsp; View All
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
                           onClick={ this.handleMenuClose }>
-                    <MailIcon /> &nbsp; Notifications Will Go Here
+                    <NotificationsIcon /> &nbsp; Notifications Will Go Here
+                </MenuItem>
+            </Menu>
+        );
+
+        const renderAuthMenu = (
+            <Menu anchorEl={ authAnchorEl }
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  open={ isAuthMenuOpen }
+                  onClose={ this.handleMenuClose }>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                              this.props.history.push('/profile');
+                              this.handleMenuClose();
+                          }}>
+                    <PersonIcon /> &nbsp; Profile
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                              this.props.history.push('/sign-in');
+                              this.handleMenuClose();
+                          }}>
+                    <SignInIcon /> &nbsp; Sign In
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                              this.props.history.push('/sign-up');
+                              this.handleMenuClose();
+                          }}>
+                    <SignUpIcon /> &nbsp; Sign Up
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                              this.handleMenuClose();
+                          }}>
+                    <SignOutIcon /> &nbsp; Sign Out
                 </MenuItem>
             </Menu>
         );
@@ -228,15 +282,18 @@ class PrimarySearchAppBar extends React.Component {
                                     <MailIcon />
                                 </Badge>
                             </IconButton>
-                            <IconButton aria-owns={ isMenuOpen ? 'material-appbar' : undefined }
+                            <IconButton aria-owns={ isNotificationsMenuOpen ? 'material-appbar' : undefined }
                                         aria-haspopup='true'
-                                        onClick={ this.handleProfileMenuOpen }
+                                        onClick={ this.handleNotificationsMenuOpen }
                                         color='inherit'>
-                                <Badge badgeContent={17} color='secondary'>
+                                <Badge badgeContent={ 17 } color='secondary'>
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>
-                            <IconButton color='inherit' onClick={ () => this.props.history.push('/profile') }>
+                            <IconButton aria-owns={ isAuthMenuOpen ? 'material-appbar' : undefined }
+                                        aria-haspopup='true'
+                                        onClick={ this.handleAuthMenuOpen }
+                                        color='inherit'>
                                 <AccountCircle />
                             </IconButton>
                         </div>
@@ -248,6 +305,7 @@ class PrimarySearchAppBar extends React.Component {
                     </Toolbar>
                 </AppBar>
                 { renderMenu }
+                { renderAuthMenu }
                 { renderMobileMenu }
             </div>
         );
