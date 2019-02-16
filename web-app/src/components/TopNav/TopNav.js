@@ -3,18 +3,14 @@ import { withRouter } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-// import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-// import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import PersonIcon from '@material-ui/icons/Person';
-import SettingsIcon from '@material-ui/icons/Settings';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -121,14 +117,10 @@ class PrimarySearchAppBar extends React.Component {
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                   open={ isMenuOpen }
                   onClose={ this.handleMenuClose }>
-                <MenuItem onClick={ () => {
-                    this.props.history.push('/profile');
-                    this.handleMenuClose();
-                }}><PersonIcon/> Profile</MenuItem>
-                <MenuItem onClick={() => {
-                    this.props.history.push('/settings');
-                    this.handleMenuClose();
-                }}><SettingsIcon /> Settings</MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ this.handleMenuClose }>
+                    <MailIcon /> &nbsp; Notifications Will Go Here
+                </MenuItem>
             </Menu>
         );
 
@@ -138,7 +130,21 @@ class PrimarySearchAppBar extends React.Component {
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                   open={ isMobileMenuOpen }
                   onClose={ this.handleMenuClose }>
-                <MenuItem onClick={ this.handleMobileMenuClose }>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/');
+                            this.handleMobileMenuClose();
+                          }}>
+                    <IconButton color='inherit'>
+                        <AccountCircle />
+                    </IconButton>
+                    <p>Home</p>
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/messages');
+                            this.handleMobileMenuClose();
+                          }}>
                     <IconButton color='inherit'>
                         <Badge badgeContent={ 4 } color='secondary'>
                             <MailIcon />
@@ -146,7 +152,11 @@ class PrimarySearchAppBar extends React.Component {
                     </IconButton>
                     <p>Messages</p>
                 </MenuItem>
-                <MenuItem onClick={ this.handleMobileMenuClose }>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/notifications');
+                            this.handleMobileMenuClose();
+                          }}>
                     <IconButton color='inherit'>
                         <Badge badgeContent={ 11 } color='secondary'>
                             <NotificationsIcon />
@@ -154,11 +164,45 @@ class PrimarySearchAppBar extends React.Component {
                     </IconButton>
                     <p>Notifications</p>
                 </MenuItem>
-                <MenuItem onClick={ this.handleProfileMenuOpen }>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/ask');
+                            this.handleMobileMenuClose();
+                          }}>
+                    <IconButton color='inherit'>
+                        <AccountCircle />
+                    </IconButton>
+                    <p>Ask a Question</p>
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/profile');
+                            this.handleMobileMenuClose();
+                          }}>
                     <IconButton color='inherit'>
                         <AccountCircle />
                     </IconButton>
                     <p>Profile</p>
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/faqs');
+                            this.handleMobileMenuClose();
+                          }}>
+                    <IconButton color='inherit'>
+                        <AccountCircle />
+                    </IconButton>
+                    <p>FAQs</p>
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/settings');
+                            this.handleMobileMenuClose();
+                          }}>
+                    <IconButton color='inherit'>
+                        <AccountCircle />
+                    </IconButton>
+                    <p>Settings</p>
                 </MenuItem>
             </Menu>
         );
@@ -167,10 +211,6 @@ class PrimarySearchAppBar extends React.Component {
             <div>
                 <AppBar position='fixed' classes={{ root: this.props.customClass}}>
                     <Toolbar>
-                        {/*<IconButton className={ classes.menuButton } color='inherit' aria-label='Open drawer'>
-                            <MenuIcon />
-                        </IconButton>*/}
-
                         <div className={ classes.search }>
                             <div className={ classes.searchIcon }>
                                 <SearchIcon />
@@ -188,15 +228,15 @@ class PrimarySearchAppBar extends React.Component {
                                     <MailIcon />
                                 </Badge>
                             </IconButton>
-                            <IconButton color='inherit'>
-                                <Badge badgeContent={ 17 } color='secondary'>
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
                             <IconButton aria-owns={ isMenuOpen ? 'material-appbar' : undefined }
                                         aria-haspopup='true'
                                         onClick={ this.handleProfileMenuOpen }
                                         color='inherit'>
+                                <Badge badgeContent={17} color='secondary'>
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
+                            <IconButton color='inherit' onClick={ () => this.props.history.push('/profile') }>
                                 <AccountCircle />
                             </IconButton>
                         </div>

@@ -48,6 +48,8 @@ const styles = theme => ({
     },
     content: {
         flexGrow: 1,
+        maxWidth: '100%',
+        wordBreak: 'break-all',
         padding: theme.spacing.unit * 3,
     },
 });

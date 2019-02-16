@@ -1,16 +1,16 @@
 import React, { PureComponent } from 'react';
 import Typography from '@material-ui/core/Typography';
 
-class Profile extends PureComponent {
+class Notifications extends PureComponent {
     render() {
         return (
             <React.Fragment>
                 <Typography variant='h3' color='secondary'>
-                    Profile Content
+                    Notifications Content
                 </Typography>
             </React.Fragment>
         );
     }
 }
 
-export default Profile;
+export default Notifications;

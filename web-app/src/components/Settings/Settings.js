@@ -5,7 +5,7 @@ class Settings extends PureComponent {
     render() {
         return (
             <React.Fragment>
-                <Typography variant='h1' color='secondary'>
+                <Typography variant='h3' color='secondary'>
                     Settings Content
                 </Typography>
             </React.Fragment>

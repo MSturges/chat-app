@@ -5,7 +5,7 @@ class FAQs extends PureComponent {
     render() {
         return (
             <React.Fragment>
-                <Typography variant='h1' color='secondary'>
+                <Typography variant='h3' color='secondary'>
                     FAQs Content
                 </Typography>
             </React.Fragment>
