@@ -7,7 +7,7 @@ import './sass/style.scss';
 
 import * as serviceWorker from './serviceWorker';
 
-import Layout from './components/Layout/Layout';
+import Router from './Router';
 
 import 'typeface-roboto';
 
@@ -65,18 +65,18 @@ const render = Component => {
     return ReactDOM.render(
         <Provider store={ store }>
             <MuiThemeProvider theme={ theme }>
-                <Layout />
+                <Router />
             </MuiThemeProvider>, 
         </Provider>,
         document.getElementById('root')
     );
 };
 
-render(Layout);
+render(Router);
 
 if (module.hot) {
-    module.hot.accept('./components/Layout/Layout', () => {
-        const NextApp = require('./components/Layout/Layout').default;
+    module.hot.accept('./Router', () => {
+        const NextApp = require('./Router').default;
         render(NextApp);
     });
 }

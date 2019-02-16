@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,7 +17,6 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
 import TopNav from '../TopNav/TopNav';
-import Router from '../../Router';
 
 const drawerWidth = 240;
 
@@ -80,6 +80,30 @@ class ResponsiveDrawer extends React.Component {
         }
     };
 
+    navigate = (text) => {
+        switch (text.toLowerCase()) {
+            case 'home':
+                this.props.history.push('/');
+            break;
+
+            case 'ask a question':
+                this.props.history.push('/ask');
+            break;
+
+            case 'faqs':
+                this.props.history.push('/faqs');
+            break;
+
+            case 'settings':
+                this.props.history.push('/settings');
+            break;
+        
+            default:
+                this.props.history.push('/');
+            break;
+        }
+    };
+
     render() {
         const { classes, theme } = this.props;
 
@@ -94,7 +118,7 @@ class ResponsiveDrawer extends React.Component {
                 <Divider />
                 <List>
                     { [ 'Home', 'Ask a Question' ].map((text, index) => (
-                        <ListItem button key={ text }>
+                        <ListItem button key={ text } onClick={ () => this.navigate(text) }>
                             <ListItemIcon classes={{ root: 'grey-icon' }}>{ this.getIcon(text) }</ListItemIcon>
                             <ListItemText primary={ text } classes={{ root: 'white-text' }}/>
                         </ListItem>
@@ -103,7 +127,7 @@ class ResponsiveDrawer extends React.Component {
                 <Divider />
                 <List>
                     { [ 'FAQs', 'Settings' ].map((text, index) => (
-                        <ListItem button key={ text }>
+                        <ListItem button key={ text } onClick={ () => this.navigate(text) }>
                             <ListItemIcon classes={{ root: 'grey-icon' }}>{ this.getIcon(text) }</ListItemIcon>
                             <ListItemText primary={ text } classes={{ root: 'white-text' }} />
                         </ListItem>
@@ -143,11 +167,11 @@ class ResponsiveDrawer extends React.Component {
                     </Hidden>
                 </nav>
                 <main className={ classes.content }>
-                    <Router />
+                    { this.props.routes }
                 </main>
             </div>
         );
     }
 }
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default withStyles(styles, { withTheme: true })(withRouter(ResponsiveDrawer));

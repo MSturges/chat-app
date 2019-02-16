@@ -2,19 +2,40 @@ import React, { PureComponent } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import { asyncComponent } from 'react-async-component';
 
+import Layout from './components/Layout/Layout';
+
 const Home = asyncComponent({
     resolve: () => import('./components/Home/Home')
 });
 
+const AskAQuestion = asyncComponent({
+    resolve: () => import('./components/AskAQuestion/AskAQuestion')
+});
+
+const FAQs = asyncComponent({
+    resolve: () => import('./components/FAQs/FAQs')
+});
+
+const Settings = asyncComponent({
+    resolve: () => import('./components/Settings/Settings')
+});
+
 class Router extends PureComponent {
     render() {
+        let routes = (
+            <Switch>
+                <Route exact path='/' component={ Home } />
+                <Route exact path='/ask' component={ AskAQuestion } />
+                <Route exact path='/faqs' component={ FAQs } />
+                <Route exact path='/settings' component={ Settings } />
+                <Redirect from='*' to='/' />
+            </Switch>
+        );
+
         return (    
             <React.Fragment>
                 <BrowserRouter>
-                    <Switch>
-                        <Route exact path='/' component={ Home } />
-                        <Redirect from='*' to='/' />
-                    </Switch>
+                    <Layout routes={ routes }/>
                 </BrowserRouter>
             </React.Fragment>
         );
