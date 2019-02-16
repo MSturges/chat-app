@@ -9,12 +9,14 @@ const Home = asyncComponent({
 class Router extends PureComponent {
     render() {
         return (    
-            <BrowserRouter>
-                <Switch>
-                    <Route exact path='/' component={ Home } />
-                    <Redirect from='*' to='/' />
-                </Switch>
-            </BrowserRouter>
+            <React.Fragment>
+                <BrowserRouter>
+                    <Switch>
+                        <Route exact path='/' component={ Home } />
+                        <Redirect from='*' to='/' />
+                    </Switch>
+                </BrowserRouter>
+            </React.Fragment>
         );
     }
 }

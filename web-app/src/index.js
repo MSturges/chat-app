@@ -7,7 +7,7 @@ import './sass/style.scss';
 
 import * as serviceWorker from './serviceWorker';
 
-import Router from './Router';
+import Layout from './components/Layout/Layout';
 
 import 'typeface-roboto';
 
@@ -23,7 +23,8 @@ const theme = createMuiTheme({
             'white': '#fff'
         },
         'background': {
-            'paper': 'rgba(69, 80, 108, 1)',
+            'paper': 'rgba(70, 75, 85, 1)',
+            // 'paper': 'rgba(69, 80, 108, 1)', // bluish/purple/grey color
             'default': '#fafafa'
         },
         'primary': {
@@ -64,18 +65,18 @@ const render = Component => {
     return ReactDOM.render(
         <Provider store={ store }>
             <MuiThemeProvider theme={ theme }>
-                <Router />
+                <Layout />
             </MuiThemeProvider>, 
         </Provider>,
         document.getElementById('root')
     );
 };
 
-render(Router);
+render(Layout);
 
 if (module.hot) {
-    module.hot.accept('./Router', () => {
-        const NextApp = require('./Router').default;
+    module.hot.accept('./components/Layout/Layout', () => {
+        const NextApp = require('./components/Layout/Layout').default;
         render(NextApp);
     });
 }
