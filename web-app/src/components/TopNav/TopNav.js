@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,6 +13,8 @@ import { withStyles } from '@material-ui/core/styles';
 // import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import PersonIcon from '@material-ui/icons/Person';
+import SettingsIcon from '@material-ui/icons/Settings';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -118,8 +121,14 @@ class PrimarySearchAppBar extends React.Component {
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                   open={ isMenuOpen }
                   onClose={ this.handleMenuClose }>
-                <MenuItem onClick={ this.handleMenuClose }>Profile</MenuItem>
-                <MenuItem onClick={ this.handleMenuClose }>My account</MenuItem>
+                <MenuItem onClick={ () => {
+                    this.props.history.push('/profile');
+                    this.handleMenuClose();
+                }}><PersonIcon/> Profile</MenuItem>
+                <MenuItem onClick={() => {
+                    this.props.history.push('/settings');
+                    this.handleMenuClose();
+                }}><SettingsIcon /> Settings</MenuItem>
             </Menu>
         );
 
@@ -174,7 +183,7 @@ class PrimarySearchAppBar extends React.Component {
                         </div>
                         <div className={ classes.grow } />
                         <div className={ classes.sectionDesktop }>
-                            <IconButton color='inherit'>
+                            <IconButton color='inherit' onClick={ () => this.props.history.push('/messages') }>
                                 <Badge badgeContent={ 4 } color='secondary'>
                                     <MailIcon />
                                 </Badge>
@@ -205,4 +214,4 @@ class PrimarySearchAppBar extends React.Component {
     }
 }
 
-export default withStyles(styles)(PrimarySearchAppBar);
+export default withStyles(styles)(withRouter(PrimarySearchAppBar));

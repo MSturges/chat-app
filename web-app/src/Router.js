@@ -20,6 +20,14 @@ const Settings = asyncComponent({
     resolve: () => import('./components/Settings/Settings')
 });
 
+const Profile = asyncComponent({
+    resolve: () => import('./components/Profile/Profile')
+});
+
+const Messages = asyncComponent({
+    resolve: () => import('./components/Messages/Messages')
+});
+
 class Router extends PureComponent {
     render() {
         let routes = (
@@ -28,6 +36,8 @@ class Router extends PureComponent {
                 <Route exact path='/ask' component={ AskAQuestion } />
                 <Route exact path='/faqs' component={ FAQs } />
                 <Route exact path='/settings' component={ Settings } />
+                <Route exact path='/profile' component={ Profile } />
+                <Route exact path='/messages' component={ Messages } />
                 <Redirect from='*' to='/' />
             </Switch>
         );
