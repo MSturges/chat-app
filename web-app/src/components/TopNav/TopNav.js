@@ -45,11 +45,13 @@ const styles = theme => ({
         marginRight: theme.spacing.unit * 2,
         marginLeft: 15,
         width: '100%',
-        maxWidth: '275px',
+        maxWidth: '165px',
+        float: 'right',
         [theme.breakpoints.up('sm')]: {
             marginLeft: theme.spacing.unit * 3,
             width: 'auto',
-            maxWidth: 'none'
+            maxWidth: 'none',
+            float: 'none'
         },
     },
     searchIcon: {
