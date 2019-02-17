@@ -7,6 +7,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Typography from '@material-ui/core/Typography';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import ViewIcon from '@material-ui/icons/Visibility';
@@ -29,9 +30,9 @@ const styles = theme => ({
         marginRight: 20,
     },
     title: {
-        display: 'none',
+        display: 'block',
         [theme.breakpoints.up('sm')]: {
-            display: 'block',
+            display: 'none',
         },
     },
     search: {
@@ -42,11 +43,13 @@ const styles = theme => ({
             backgroundColor: fade(theme.palette.common.white, 0.25),
         },
         marginRight: theme.spacing.unit * 2,
-        marginLeft: 0,
+        marginLeft: 15,
         width: '100%',
+        maxWidth: '275px',
         [theme.breakpoints.up('sm')]: {
             marginLeft: theme.spacing.unit * 3,
             width: 'auto',
+            maxWidth: 'none'
         },
     },
     searchIcon: {
@@ -265,6 +268,9 @@ class PrimarySearchAppBar extends React.Component {
             <div>
                 <AppBar position='fixed' classes={{ root: this.props.customClass}}>
                     <Toolbar>
+                        <Typography className={ classes.title } variant='h6' color='inherit' noWrap>
+                            Qs n Paids
+                        </Typography>
                         <div className={ classes.search }>
                             <div className={ classes.searchIcon }>
                                 <SearchIcon />
