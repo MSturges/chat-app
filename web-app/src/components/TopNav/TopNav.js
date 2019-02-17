@@ -10,7 +10,12 @@ import Menu from '@material-ui/core/Menu';
 import Typography from '@material-ui/core/Typography';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 import ViewIcon from '@material-ui/icons/Visibility';
+import HomeIcon from '@material-ui/icons/Home';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import LiveHelpIcon from '@material-ui/icons/LiveHelp';
+import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import PersonIcon from '@material-ui/icons/Person';
@@ -46,12 +51,10 @@ const styles = theme => ({
         marginLeft: 15,
         width: '100%',
         maxWidth: '165px',
-        float: 'right',
         [theme.breakpoints.up('sm')]: {
             marginLeft: theme.spacing.unit * 3,
             width: 'auto',
             maxWidth: 'none',
-            float: 'none'
         },
     },
     searchIcon: {
@@ -97,6 +100,27 @@ class PrimarySearchAppBar extends React.Component {
         anchorEl: null,
         authAnchorEl: null,
         mobileMoreAnchorEl: null,
+    };
+
+    handleResize = () => {
+        if (this.state.anchorEl ||
+            this.state.authAnchorEl ||
+            this.state.mobileMoreAnchorEl) {
+            this.handleMenuClose();
+        }
+    };
+
+    componentDidMount = () => {
+        // resize handler
+        this.myListenerWithContext = this.handleResize.bind(this);
+
+        // close menus after window resize to avoid misplacement of dropdowns
+        window.addEventListener('resize', this.myListenerWithContext);
+    };
+
+    componentWillUnmount = () => {
+        // stop listening to resize after component unmounts
+        window.removeEventListener('resize', this.myListenerWithContext);
     };
 
     handleNotificationsMenuOpen = event => {
@@ -195,9 +219,19 @@ class PrimarySearchAppBar extends React.Component {
                             this.handleMobileMenuClose();
                           }}>
                     <IconButton color='inherit'>
-                        <AccountCircle />
+                        <HomeIcon />
                     </IconButton>
                     <p>Home</p>
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/ask');
+                            this.handleMobileMenuClose();
+                          }}>
+                    <IconButton color='inherit'>
+                        <QuestionAnswerIcon />
+                    </IconButton>
+                    <p>Ask a Question</p>
                 </MenuItem>
                 <MenuItem classes={{ root: 'grey-icon white-text' }}
                           onClick={ () => {
@@ -223,16 +257,7 @@ class PrimarySearchAppBar extends React.Component {
                     </IconButton>
                     <p>Notifications</p>
                 </MenuItem>
-                <MenuItem classes={{ root: 'grey-icon white-text' }}
-                          onClick={ () => {
-                            this.props.history.push('/ask');
-                            this.handleMobileMenuClose();
-                          }}>
-                    <IconButton color='inherit'>
-                        <AccountCircle />
-                    </IconButton>
-                    <p>Ask a Question</p>
-                </MenuItem>
+                <Divider />
                 <MenuItem classes={{ root: 'grey-icon white-text' }}
                           onClick={ () => {
                             this.props.history.push('/profile');
@@ -245,11 +270,42 @@ class PrimarySearchAppBar extends React.Component {
                 </MenuItem>
                 <MenuItem classes={{ root: 'grey-icon white-text' }}
                           onClick={ () => {
+                            this.props.history.push('/sign-in');
+                            this.handleMobileMenuClose();
+                          }}>
+                    <IconButton color='inherit'>
+                        <SignInIcon />
+                    </IconButton>
+                    <p>Sign In</p>
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/sign-up');
+                            this.handleMobileMenuClose();
+                          }}>
+                    <IconButton color='inherit'>
+                        <SignUpIcon />
+                    </IconButton>
+                    <p>Sign Up</p>
+                </MenuItem>
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
+                            this.props.history.push('/sign-out');
+                            this.handleMobileMenuClose();
+                          }}>
+                    <IconButton color='inherit'>
+                        <SignOutIcon />
+                    </IconButton>
+                    <p>Sign Out</p>
+                </MenuItem>
+                <Divider />
+                <MenuItem classes={{ root: 'grey-icon white-text' }}
+                          onClick={ () => {
                             this.props.history.push('/faqs');
                             this.handleMobileMenuClose();
                           }}>
                     <IconButton color='inherit'>
-                        <AccountCircle />
+                        <LiveHelpIcon />
                     </IconButton>
                     <p>FAQs</p>
                 </MenuItem>
@@ -259,7 +315,7 @@ class PrimarySearchAppBar extends React.Component {
                             this.handleMobileMenuClose();
                           }}>
                     <IconButton color='inherit'>
-                        <AccountCircle />
+                        <SettingsIcon />
                     </IconButton>
                     <p>Settings</p>
                 </MenuItem>
