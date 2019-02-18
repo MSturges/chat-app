@@ -6,14 +6,13 @@ module.exports = ({ name, userIds }) => {
   const chatGroup = new ChatGroupModel({ name });
 
   userIds.forEach(id => {
-    UserModel.findOne({ _id: userIds }).then(user => {
-      // add the chat id to user chatGroups
+    UserModel.findOne({ _id: id }).then(user => {
+      // add the groupChatId for each users chatGroups
       user.chatGroups.push(chatGroup.id);
-      // add user id to chatGroup users
-      chatGroup.users.push(id);
-
       user.save();
     });
+    // add the id of each user to the new chatGroup instance
+    chatGroup.users.push(id);
   });
 
   return chatGroup.save();

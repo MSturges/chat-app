@@ -6,7 +6,7 @@ const MessageSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "chatGroup"
   },
-  fromUser: {
+  from: {
     type: Schema.Types.ObjectId,
     ref: "user"
   },

@@ -9,7 +9,7 @@ const RootResolvers = merge(
 );
 
 module.exports = {
-  typeDefs: importSchema("./schema/rootSchema2.graphql"),
+  typeDefs: importSchema("./schema/rootSchema.graphql"),
   resolvers: RootResolvers,
   formatError: error => {
     console.log("server error...index.js", error);

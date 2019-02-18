@@ -5,7 +5,7 @@ module.exports = ({ message, userId, groupId }) => {
   // console.log("messageProps", messageProps);
   const Message = new MessageModel({ message });
   Message.to = groupId;
-  Message.fromUser = userId;
+  Message.from = userId;
 
   ChatGroupModel.findOne({ _id: groupId }).then(group => {
     group.messages.push(Message);

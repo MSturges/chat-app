@@ -3,6 +3,8 @@ const GetGroupQuery = require("../../database/queries/chatGroup/getChatGroup");
 
 const GetUsersQuery = require("../../database/queries/user/getUsers");
 
+const GetMessagesQuery = require("../../database/queries/message/getMessages");
+
 export const resolvers = {
   Query: {
     chatGroup(_, { id }) {
@@ -36,9 +38,14 @@ export const resolvers = {
           console.log("mongo error", err);
         });
     },
-    messages(args) {
-      console.log("args", args);
-      return [];
+    messages({ _id }) {
+      return GetMessagesQuery(_id)
+        .then(data => {
+          return data.messages;
+        })
+        .catch(err => {
+          console.log("mongo error", err);
+        });
     }
   }
 };

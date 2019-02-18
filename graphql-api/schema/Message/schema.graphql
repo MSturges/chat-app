@@ -1,7 +1,7 @@
 type Message {
   id: ID! # unique id for message
   to: ChatGroup! # group message was sent in
-  fromUser: User! # user who sent the message
+  from: User! # user who sent the message
   message: String! # message text
   createdAt: Date! # when message was created
 }

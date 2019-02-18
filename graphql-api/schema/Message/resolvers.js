@@ -7,7 +7,6 @@ export const resolvers = {
     createMessage(_, args) {
       return CreateMessageQuery(args)
         .then(data => {
-          console.log("data", data);
           return data;
         })
         .catch(err => {
@@ -25,8 +24,8 @@ export const resolvers = {
           console.log("mongo error", err);
         });
     },
-    fromUser({ fromUser }) {
-      return GetUserQuery(fromUser)
+    from({ from }) {
+      return GetUserQuery(from)
         .then(data => {
           return data;
         })
