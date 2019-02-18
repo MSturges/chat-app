@@ -7,11 +7,11 @@ type Message {
 }
 
 # graphql subscriptions for event based pubsub
-# type Subscription {
-#   # Subscription fires on every message added
-#   # for any of the groups with one of these groupIds
-#   messageAdded(userId: Int, groupIds: [Int]): Message
-# }
+type Subscription {
+  # Subscription fires on every message added
+  # for any of the groups with one of these groupIds
+  messageAdded(userId: ID!, groupIds: [ID]!): Message
+}
 
 type Mutation {
   # send a message to a group
