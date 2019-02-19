@@ -1,8 +1,6 @@
 const CreateGroupQuery = require("../../database/queries/chatGroup/CreateChatGroup");
 const GetGroupQuery = require("../../database/queries/chatGroup/getChatGroup");
-
 const GetUsersQuery = require("../../database/queries/user/getUsers");
-
 const GetMessagesQuery = require("../../database/queries/message/getMessages");
 
 export const resolvers = {

@@ -5,7 +5,7 @@ module.exports = _id => {
     path: "messages",
     model: "message",
     options: {
-      offset: 4,
+      skip: 100,
       limit: 10,
       sort: { createdAt: -1 }
     },
