@@ -19,5 +19,5 @@ type Mutation {
 type Subscription {
   # Subscription fires on every message added
   # for any of the groups with one of these groupIds
-  messageAdded(userId: ID!, groupIds: [ID]!): Message
+  messageAdded(groupIds: ID!): Message
 }

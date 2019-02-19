@@ -28,7 +28,8 @@ const UserSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  jwtVersion: Number
 });
 
 const UserModel = mongoose.model("user", UserSchema);
