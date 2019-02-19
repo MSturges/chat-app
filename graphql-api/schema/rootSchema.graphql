@@ -2,4 +2,4 @@
 
 # import Query.*, Mutation.* from "./User/schema.graphql"
 # import Query.*, Mutation.* from "./ChatGroup/schema.graphql"
-# import Mutation.*, Subscription.* from "./Message/schema.graphql"
+# import Query.*, Mutation.*, Subscription.* from "./Message/schema.graphql"

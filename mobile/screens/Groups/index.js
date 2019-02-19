@@ -14,7 +14,10 @@ class Groups extends Component {
     const s = styles(this.props.theme);
 
     return (
-      <Query query={USER_QUERY} variables={{ id: 1 }}>
+      <Query
+        query={USER_QUERY}
+        variables={{ userId: "5c6af3affb0ff40eb602aa89" }}
+      >
         {({ data, loading }) => {
           if (loading) {
             return (

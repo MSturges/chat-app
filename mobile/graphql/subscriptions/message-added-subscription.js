@@ -1,12 +1,19 @@
 import gql from "graphql-tag";
-import MESSAGE_FRAGMENT from "../fragments/message-fragment";
 
 const MESSAGE_ADDED_SUBSCRIPTION = gql`
-  subscription onMessageAdded($groupIds: [Int], $userId: Int) {
+  subscription onMessageAdded($groupIds: [ID]!, $userId: ID!) {
     messageAdded(groupIds: $groupIds, userId: $userId) {
-      ...MessageFragment
+      id
+      to {
+        id
+      }
+      from {
+        id
+        username
+      }
+      message
+      createdAt
     }
   }
-  ${MESSAGE_FRAGMENT}
 `;
 export default MESSAGE_ADDED_SUBSCRIPTION;

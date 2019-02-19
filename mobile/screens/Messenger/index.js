@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import { Query } from "react-apollo";
 import update from "immutability-helper";
 import { Buffer } from "buffer";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import MessengerView from "./MessengerView";
-import GROUP_QUERY from "../../graphql/queries/group-query";
+import CHAT_GROUP_QUERY from "../../graphql/queries/chat-group-query";
 import MESSAGE_ADDED_SUBSCRIPTION from "../../graphql/subscriptions/message-added-subscription";
 
 const ITEMS_PER_PAGE = 10;
@@ -20,10 +20,10 @@ class Messages extends Component {
     const s = styles(theme);
     return (
       <Query
-        query={GROUP_QUERY}
+        query={CHAT_GROUP_QUERY}
         variables={{ groupId: id, first: ITEMS_PER_PAGE }}
       >
-        {({ data: { group }, loading, fetchMore, subscribeToMore }) => {
+        {({ data: { chatGroup }, loading, fetchMore, subscribeToMore }) => {
           if (loading) {
             return (
               <View style={[s.loading, s.container]}>
@@ -32,58 +32,53 @@ class Messages extends Component {
             );
           }
 
-          const loadMoreEntries = () => {
-            return fetchMore({
-              // GROUP_QUERY is used by default)
-              variables: {
-                // load more queries starting from the cursor of the last (oldest) message
-                after:
-                  group.messages.edges[group.messages.edges.length - 1].cursor
-              },
-              updateQuery: (previousResult, { fetchMoreResult }) => {
-                // we will make an extra call to check if no more entries
-                if (!fetchMoreResult) {
-                  return previousResult;
-                }
-                // push results (older messages) to end of messages list
-                return update(previousResult, {
-                  group: {
-                    messages: {
-                      edges: { $push: fetchMoreResult.group.messages.edges },
-                      pageInfo: {
-                        $set: fetchMoreResult.group.messages.pageInfo
-                      }
-                    }
-                  }
-                });
-              }
-            });
-          };
+          // const loadMoreEntries = () => {
+          //   return fetchMore({
+          //     // GROUP_QUERY is used by default)
+          //     variables: {
+          //       // load more queries starting from the cursor of the last (oldest) message
+          //       after:
+          //         group.messages.edges[group.messages.edges.length - 1].cursor
+          //     },
+          //     updateQuery: (previousResult, { fetchMoreResult }) => {
+          //       // we will make an extra call to check if no more entries
+          //       if (!fetchMoreResult) {
+          //         return previousResult;
+          //       }
+          //       // push results (older messages) to end of messages list
+          //       return update(previousResult, {
+          //         group: {
+          //           messages: {
+          //             edges: { $push: fetchMoreResult.group.messages.edges },
+          //             pageInfo: {
+          //               $set: fetchMoreResult.group.messages.pageInfo
+          //             }
+          //           }
+          //         }
+          //       });
+          //     }
+          //   });
+          // };
 
           const subscribeToNewMessages = () =>
             subscribeToMore({
               document: MESSAGE_ADDED_SUBSCRIPTION,
               variables: {
-                groupIds: 1,
-                userId: 1
+                groupIds: [id],
+                userId: "5c6af3affb0ff40eb602aa89"
               },
               updateQuery: (previousResult, { subscriptionData }) => {
+                if (!subscriptionData.data) return previousResult;
+
                 const newMessage = subscriptionData.data.messageAdded;
-                return update(previousResult, {
-                  group: {
-                    messages: {
-                      edges: {
-                        $unshift: [
-                          {
-                            __typename: "MessageEdge",
-                            node: newMessage,
-                            cursor: Buffer.from(
-                              newMessage.id.toString()
-                            ).toString("base64")
-                          }
-                        ]
-                      }
-                    }
+
+                return Object.assign({}, previousResult, {
+                  chatGroup: {
+                    __typename: "ChatGroup",
+                    users: previousResult.chatGroup.users,
+                    id: previousResult.chatGroup.id,
+                    name: previousResult.chatGroup.name,
+                    messages: [newMessage, ...previousResult.chatGroup.messages]
                   }
                 });
               }
@@ -91,10 +86,10 @@ class Messages extends Component {
 
           return (
             <MessengerView
-              group={group}
+              chatGroup={chatGroup}
               groupId={id}
               ITEMS_PER_PAGE={ITEMS_PER_PAGE}
-              loadMoreEntries={loadMoreEntries}
+              // loadMoreEntries={loadMoreEntries}
               subscribeToNewMessages={subscribeToNewMessages}
             />
           );
