@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, ActivityIndicator, View } from "react-native";
+import { StyleSheet, ActivityIndicator, View, Text } from "react-native";
 import { Query } from "react-apollo";
 
 import { withTheme } from "../../contexts/ThemeContext";
@@ -17,6 +17,7 @@ class Groups extends Component {
       <Query
         query={USER_QUERY}
         variables={{ userId: "5c6af3affb0ff40eb602aa89" }}
+        skip={true}
       >
         {({ data, loading }) => {
           if (loading) {
@@ -26,6 +27,11 @@ class Groups extends Component {
               </View>
             );
           }
+          return (
+            <Layout>
+              <Text>groups would be here...</Text>
+            </Layout>
+          );
           return (
             <Layout>
               <GroupList data={data} />
