@@ -13,7 +13,11 @@ class Group extends Component {
     const s = styles(this.props.theme);
 
     return (
-      <TouchableHighlight key={id} onPress={goToMessagesSceen}>
+      <TouchableHighlight
+        key={id}
+        onPress={goToMessagesSceen}
+        style={s.hightlight}
+      >
         <View style={s.groupContainer}>
           <Text style={s.groupName}>{`${name}`}</Text>
         </View>
@@ -24,23 +28,32 @@ class Group extends Component {
 
 const styles = theme =>
   StyleSheet.create({
-    container: {
-      backgroundColor: "white",
-      flex: 1
+    hightlight: {
+      marginBottom: 16
     },
     groupContainer: {
       flex: 1,
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: "white",
-      borderBottomColor: "#eee",
-      borderBottomWidth: 1,
       paddingHorizontal: 12,
-      paddingVertical: 8
+      paddingVertical: 8,
+      backgroundColor: theme.primaryTwo,
+      height: 50,
+
+      shadowColor: "rgb(0,0,0)",
+      shadowOffset: {
+        width: 0,
+        height: 1
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+
+      elevation: 3
     },
     groupName: {
       fontWeight: "bold",
-      flex: 0.7
+      flex: 0.7,
+      color: theme.fontPrimary
     },
     loading: {
       justifyContent: "center",

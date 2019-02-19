@@ -1,0 +1,22 @@
+type ChatGroup {
+  id: ID! # unique id for the group
+  name: String! # name of the group
+  users: [User]! # users in the group
+  # Relay-connecttion spec the gold standard
+  messages: [Message]
+}
+
+input CreateChatGroupInput {
+  name: String!
+  userIds: [ID]!
+}
+
+type Query {
+  # Return a group by its id -- must supply an id to query
+  chatGroup(id: ID!): ChatGroup
+}
+
+type Mutation {
+  # send a message to a group
+  createChatGroup(group: CreateChatGroupInput!): ChatGroup
+}

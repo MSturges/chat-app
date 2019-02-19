@@ -2,19 +2,17 @@ import { _ } from "lodash";
 import { FlatList, StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import React, { Component } from "react";
 import randomColor from "randomcolor";
-// import { Subscription } from "react-apollo";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
-// import MESSAGE_ADDED_SUBSCRIPTION from "../../graphql/subscriptions/message-added-subscription";
 
 class MessengerView extends Component {
   constructor(props) {
     super(props);
     const usernameColors = {};
-    if (props.group && props.group.users) {
-      props.group.users.forEach(user => {
+    if (props.chatGroup && props.chatGroup.users) {
+      props.chatGroup.users.forEach(user => {
         usernameColors[user.username] = randomColor();
       });
     }
@@ -31,10 +29,10 @@ class MessengerView extends Component {
   componentWillReceiveProps(nextProps) {
     const usernameColors = {};
     // check for new messages
-    if (nextProps.group) {
-      if (nextProps.group.users) {
+    if (nextProps.chatGroup) {
+      if (nextProps.chatGroup.users) {
         // apply a color to each user
-        nextProps.group.users.forEach(user => {
+        nextProps.chatGroup.users.forEach(user => {
           usernameColors[user.username] =
             this.state.usernameColors[user.username] || randomColor();
         });
@@ -45,13 +43,12 @@ class MessengerView extends Component {
     }
   }
 
-  renderItem = ({ item: edge }) => {
-    const message = edge.node;
+  renderItem = ({ item }) => {
     return (
       <Message
-        color={this.state.usernameColors[message.from.username]}
-        isCurrentUser={message.from.id === 1} // for now until we implement auth
-        message={message}
+        color={this.state.usernameColors[item.from.username]}
+        isCurrentUser={item.from.id == "5c6af3affb0ff40eb602aa89"} // for now until we implement auth
+        message={item}
       />
     );
   };
@@ -60,25 +57,25 @@ class MessengerView extends Component {
     this.flatList.scrollToIndex({ index: 0, animated: true });
   };
 
-  onEndReached = () => {
-    // on reach end load more entries
-    if (
-      !this.state.loadingMoreEntries &&
-      this.props.group.messages.pageInfo.hasNextPage
-    ) {
-      this.setState({
-        loadingMoreEntries: true
-      });
-      this.props.loadMoreEntries().then(() => {
-        this.setState({
-          loadingMoreEntries: false
-        });
-      });
-    }
-  };
+  // onEndReached = () => {
+  //   // on reach end load more entries
+  //   if (
+  //     !this.state.loadingMoreEntries &&
+  //     this.props.chatGroup.messages.pageInfo.hasNextPage
+  //   ) {
+  //     this.setState({
+  //       loadingMoreEntries: true
+  //     });
+  //     this.props.loadMoreEntries().then(() => {
+  //       this.setState({
+  //         loadingMoreEntries: false
+  //       });
+  //     });
+  //   }
+  // };
 
   render() {
-    const { theme, group, ITEMS_PER_PAGE } = this.props;
+    const { theme, chatGroup, ITEMS_PER_PAGE } = this.props;
     const s = styles(theme);
 
     return (
@@ -90,16 +87,16 @@ class MessengerView extends Component {
       >
         <FlatList
           inverted
-          data={group.messages.edges}
-          keyExtractor={item => item.node.id.toString()}
+          data={chatGroup.messages}
+          keyExtractor={item => item.id.toString()}
           renderItem={this.renderItem}
           ListEmptyComponent={<View />}
           ref={ref => (this.flatList = ref)}
-          onEndReached={this.onEndReached}
+          // onEndReached={this.onEndReached}
         />
         <MessageInput
-          groupId={group.id}
-          userId={1}
+          groupId={chatGroup.id}
+          userId="5c6af3affb0ff40eb602aa89"
           flatListRef={this.flatList}
           scrollToBottomOfMessagesList={this.scrollToBottomOfMessagesList}
           ITEMS_PER_PAGE={ITEMS_PER_PAGE}

@@ -6,7 +6,7 @@ import { Buffer } from "buffer";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import { Button } from "../../components/common";
-import GROUP_QUERY from "../../graphql/queries/group-query";
+import CHAT_GROUP_QUERY from "../../graphql/queries/chat-group-query";
 import CREATE_MESSAGE_MUTATION from "../../graphql/mutations/create-message-mutation";
 
 class MessageInput extends Component {
@@ -23,7 +23,7 @@ class MessageInput extends Component {
 
     createMessage({
       variables: {
-        text: text,
+        message: text,
         groupId: groupId,
         userId: userId
       },
@@ -33,12 +33,12 @@ class MessageInput extends Component {
         createMessage: {
           __typename: "Message",
           id: -1, // don't know id yet, but it doesn't matter
-          text: text, // we know what the text will be
+          message: "asd", // we know what the text will be
           createdAt: new Date().toISOString(), // the time is now!
           from: {
             __typename: "User",
-            id: 1,
-            username: "Justyn.Kautzer" // still faking the user
+            id: userId,
+            username: "Max" // still faking the user
           },
           to: {
             __typename: "Group",
@@ -46,12 +46,11 @@ class MessageInput extends Component {
           }
         }
       },
-      // Update runs when the result returns from grapbql-external-api
+      // Update run/s when the result returns from grapbql-external-api
       update: (store, { data: { createMessage } }) => {
         // Read the data from our cache for this query.
-
         groupData = store.readQuery({
-          query: GROUP_QUERY,
+          query: CHAT_GROUP_QUERY,
           variables: {
             groupId: groupId,
             first: ITEMS_PER_PAGE
@@ -59,17 +58,16 @@ class MessageInput extends Component {
         });
 
         // Add our message from the mutation to the end.
-        groupData.group.messages.edges.unshift({
-          __typename: "MessageEdge",
-          node: createMessage,
-          cursor: Buffer.from(createMessage.id.toString()).toString("base64")
+        groupData.chatGroup.messages.unshift({
+          __typename: "Message",
+          ...createMessage
         });
+
         // Write our data back to the cache.
         store.writeQuery({
-          query: GROUP_QUERY,
+          query: CHAT_GROUP_QUERY,
           variables: {
-            groupId: groupId,
-            first: ITEMS_PER_PAGE
+            groupId: groupId
           },
           data: groupData
         });

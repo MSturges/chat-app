@@ -11,7 +11,7 @@ class GroupList extends Component {
 
     return (
       <FlatList
-        data={data.user.groups}
+        data={data.user.chatGroups}
         keyExtractor={item => item.id.toString()}
         renderItem={item => <Group group={item} />}
         style={s.list}
@@ -29,7 +29,9 @@ const styles = theme =>
     list: {
       alignSelf: "stretch",
       backgroundColor: theme.primaryOne,
-      zIndex: 1
+      zIndex: 1,
+      paddingVertical: 16,
+      paddingHorizontal: 8
     },
     loading: {
       justifyContent: "center",

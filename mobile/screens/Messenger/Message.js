@@ -14,7 +14,7 @@ class Message extends PureComponent {
           <Text style={[styles.messageUsername, { color }]}>
             {message.from.username}
           </Text>
-          <Text>{message.text}</Text>
+          <Text>{message.message}</Text>
           <Text style={styles.messageTime}>
             {moment(message.createdAt).format("h:mm A")}
           </Text>
@@ -70,7 +70,7 @@ Message.propTypes = {
     from: PropTypes.shape({
       username: PropTypes.string.isRequired
     }),
-    text: PropTypes.string.isRequired
+    message: PropTypes.string.isRequired
   }).isRequired,
   isCurrentUser: PropTypes.bool.isRequired
 };

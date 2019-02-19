@@ -28,13 +28,11 @@ const themes = {
   },
   dark: {
     // Primary colors
-    primaryOne: "#0D1B26",
-    // primaryOne: '#040D20',
-    primaryTwo: "#1E2734",
-    primaryThree: "#0D1B26",
-    // primaryFour: '#0D1B26', <--- looks kinda good
-    // Frequently used
-    // fontPrimary: '#FFFFFF', <---animations work with rgb and rgba
+    primaryOne: "#494a4c",
+    // primaryOne: '##272c37',
+    primaryTwo: "#272c37",
+    primaryThree: "#48536a",
+
     fontPrimary: "rgb(255,255,255)",
 
     fontSecondary: "#D8D8D8",
@@ -44,7 +42,7 @@ const themes = {
     // -------------------
     // Layout Footer
     footerTopBorder: "#FFFFFF",
-    footerBackground: "#030C1D",
+    footerBackground: "#1c212a",
     footerText: "#FFFFFF",
     footerIcon: "#FFFFFF"
   },
@@ -65,9 +63,9 @@ const ThemeContext = createContext();
 
 export class ThemeProvider extends Component {
   state = {
-    ...themes["light"],
+    ...themes["dark"],
     ...themes.default,
-    selectedTheme: "light"
+    selectedTheme: "dark"
   };
 
   async componentDidMount() {

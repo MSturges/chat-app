@@ -1,12 +1,12 @@
 import gql from "graphql-tag";
 
 const USER_QUERY = gql`
-  query user($id: Int) {
-    user(id: $id) {
+  query user($userId: ID!) {
+    user(userId: $userId) {
       id
       email
       username
-      groups {
+      chatGroups {
         id
         name
       }
