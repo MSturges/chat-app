@@ -3,6 +3,7 @@ import { ApolloProvider } from "react-apollo";
 
 import { client } from "./lib/apollo-client";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import AppNavigator from "./navigation/AppNavigator";
 
 class App extends Component {
@@ -10,7 +11,9 @@ class App extends Component {
     return (
       <ApolloProvider client={client}>
         <ThemeProvider>
-          <AppNavigator />
+          <AuthProvider>
+            <AppNavigator />
+          </AuthProvider>
         </ThemeProvider>
       </ApolloProvider>
     );

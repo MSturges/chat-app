@@ -3,6 +3,7 @@ type User {
   email: String! # we will also require a unique email per user
   username: String # this is the name we'll show other users
   chatGroups: [ChatGroup] # groups the user belongs to
+  jwt: String #json web token for access
 }
 
 type Query {
@@ -12,5 +13,6 @@ type Query {
 
 type Mutation {
   # send a message to a group
-  createUser(username: String!, email: String!): User
+  login(email: String!, password: String!): User
+  signup(email: String!, password: String!, username: String): User
 }

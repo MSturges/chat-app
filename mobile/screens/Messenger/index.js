@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import { Query } from "react-apollo";
-import update from "immutability-helper";
-import { Buffer } from "buffer";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import MessengerView from "./MessengerView";
@@ -12,11 +10,9 @@ import MESSAGE_ADDED_SUBSCRIPTION from "../../graphql/subscriptions/message-adde
 const ITEMS_PER_PAGE = 10;
 
 class Messages extends Component {
-  //
-
   render() {
-    // id is groupID
     const { id, theme } = this.props;
+
     const s = styles(theme);
     return (
       <Query
@@ -31,7 +27,6 @@ class Messages extends Component {
               </View>
             );
           }
-
           // const loadMoreEntries = () => {
           //   return fetchMore({
           //     // GROUP_QUERY is used by default)
@@ -64,14 +59,11 @@ class Messages extends Component {
             subscribeToMore({
               document: MESSAGE_ADDED_SUBSCRIPTION,
               variables: {
-                groupIds: [id],
-                userId: "5c6af3affb0ff40eb602aa89"
+                groupIds: id
               },
               updateQuery: (previousResult, { subscriptionData }) => {
                 if (!subscriptionData.data) return previousResult;
-
                 const newMessage = subscriptionData.data.messageAdded;
-
                 return Object.assign({}, previousResult, {
                   chatGroup: {
                     __typename: "ChatGroup",

@@ -14,9 +14,10 @@ type Mutation {
   # send a message to a group
   createMessage(message: String!, userId: ID!, groupId: ID!): Message
 }
+
 # graphql subscriptions for event based pubsub
 type Subscription {
   # Subscription fires on every message added
   # for any of the groups with one of these groupIds
-  messageAdded(userId: ID!, groupIds: [ID]!): Message
+  messageAdded(groupIds: ID!): Message
 }
