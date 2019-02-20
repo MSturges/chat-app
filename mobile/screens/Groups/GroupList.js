@@ -22,10 +22,6 @@ class GroupList extends Component {
 
 const styles = theme =>
   StyleSheet.create({
-    container: {
-      padding: 16,
-      backgroundColor: theme.primaryOne
-    },
     list: {
       alignSelf: "stretch",
       backgroundColor: theme.primaryOne,

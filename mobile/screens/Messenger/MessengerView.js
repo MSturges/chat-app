@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import React, { Component } from "react";
 import randomColor from "randomcolor";
 
+import { withAuth } from "../../contexts/AuthContext";
 import { withTheme } from "../../contexts/ThemeContext";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
@@ -47,7 +48,7 @@ class MessengerView extends Component {
     return (
       <Message
         color={this.state.usernameColors[item.from.username]}
-        isCurrentUser={item.from.id == "5c6af3affb0ff40eb602aa89"} // for now until we implement auth
+        isCurrentUser={item.from.id == this.props.auth.id} // for now until we implement auth
         message={item}
       />
     );
@@ -77,7 +78,6 @@ class MessengerView extends Component {
   render() {
     const { theme, chatGroup, ITEMS_PER_PAGE } = this.props;
     const s = styles(theme);
-
     return (
       <KeyboardAvoidingView
         behavior={"position"}
@@ -96,7 +96,7 @@ class MessengerView extends Component {
         />
         <MessageInput
           groupId={chatGroup.id}
-          userId="5c6af3affb0ff40eb602aa89"
+          userId={this.props.auth.id}
           flatListRef={this.flatList}
           scrollToBottomOfMessagesList={this.scrollToBottomOfMessagesList}
           ITEMS_PER_PAGE={ITEMS_PER_PAGE}
@@ -116,4 +116,4 @@ const styles = theme =>
     }
   });
 
-export default withTheme(MessengerView);
+export default withTheme(withAuth(MessengerView));

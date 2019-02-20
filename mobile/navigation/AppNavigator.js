@@ -8,7 +8,7 @@ import Messenger from "../screens/Messenger";
 // settings stack
 import Settings from "../screens/Settings";
 // auth stack
-import Auth from "../screens/Auth";
+import Authenticate from "../screens/Authenticate";
 
 const AppNavigator = props => {
   return (
@@ -18,7 +18,12 @@ const AppNavigator = props => {
           <Scene key="groups" component={Groups} title="Group Chat" />
           <Scene key="messenger" component={Messenger} title="Messenger" />
           <Scene key="settings" component={Settings} title="Settings" />
-          <Scene key="auth" component={Auth} title="auth" initial />
+          <Scene
+            key="authenticate"
+            component={Authenticate}
+            title="Authenticate"
+            initial
+          />
         </Stack>
       </Scene>
     </Router>

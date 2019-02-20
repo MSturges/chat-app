@@ -81,7 +81,7 @@ export const resolvers = {
               ctx.user = Promise.resolve(user);
               return user;
             }
-            return Promise.reject("password incorrect");
+            return Promise.reject("password incorrec t");
           });
         }
         return Promise.reject("email not found");
