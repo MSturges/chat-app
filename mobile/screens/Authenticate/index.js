@@ -11,17 +11,15 @@ import {
   View
 } from "react-native";
 import { graphql, compose } from "react-apollo";
+import { connect } from "react-redux";
 import { Actions } from "react-native-router-flux";
 
-import { withAuth } from "../../contexts/AuthContext";
 import SIGNUP_MUTATION from "../../graphql/mutations/signup-mutation";
 import LOGIN_MUTATION from "../../graphql/mutations/login-mutation";
 
+import { setCurrentUser } from "../../actions/AuthActions";
+
 class Authenticate extends Component {
-  static navigationOptions = {
-    title: "Chat-App",
-    headerLeft: null
-  };
   state = {
     view: "login",
     email: "max@gmail.com",
@@ -34,7 +32,6 @@ class Authenticate extends Component {
 
   login = () => {
     const { email, password } = this.state;
-    const { setUser } = this.props.auth;
 
     this.setState({
       loading: true
@@ -42,7 +39,7 @@ class Authenticate extends Component {
     this.props
       .login({ email, password })
       .then(({ data: { login: user } }) => {
-        setUser(user);
+        this.props.dispatch(setCurrentUser(user));
         this.setState({
           loading: false
         });
@@ -53,7 +50,7 @@ class Authenticate extends Component {
           loading: false
         });
         Alert.alert(
-          `${capitalizeFirstLetter(this.state.view)} error`,
+          `${this.capitalizeFirstLetter(this.state.view)} error`,
           error.message,
           [
             { text: "OK", onPress: () => console.log("OK pressed") },
@@ -68,8 +65,6 @@ class Authenticate extends Component {
   };
 
   signup = () => {
-    const { setUser } = this.props.auth;
-
     this.setState({
       loading: true
     });
@@ -77,7 +72,7 @@ class Authenticate extends Component {
     this.props
       .signup({ email, password })
       .then(({ data: { signup: user } }) => {
-        setUser(user);
+        this.props.dispatch(setCurrentUser(user));
         this.setState({
           loading: false
         });
@@ -88,7 +83,7 @@ class Authenticate extends Component {
           loading: false
         });
         Alert.alert(
-          `${capitalizeFirstLetter(this.state.view)} error`,
+          `${this.capitalizeFirstLetter(this.state.view)} error`,
           error.message,
           [{ text: "OK", onPress: () => console.log("OK pressed") }] // eslint-disable-line no-console
         );
@@ -207,8 +202,13 @@ const signup = graphql(SIGNUP_MUTATION, {
       })
   })
 });
+
+const mapStateToProps = ({ auth }) => ({
+  auth
+});
+
 export default compose(
-  withAuth,
   login,
-  signup
+  signup,
+  connect(mapStateToProps)
 )(Authenticate);

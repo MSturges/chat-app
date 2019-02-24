@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 const MESSAGE_ADDED_SUBSCRIPTION = gql`
-  subscription onMessageAdded($groupIds: ID!) {
+  subscription messageAdded($groupIds: ID!) {
     messageAdded(groupIds: $groupIds) {
       id
       to {
@@ -16,4 +16,5 @@ const MESSAGE_ADDED_SUBSCRIPTION = gql`
     }
   }
 `;
+
 export default MESSAGE_ADDED_SUBSCRIPTION;

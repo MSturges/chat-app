@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Mutation } from "react-apollo";
-import { Buffer } from "buffer";
+import { Mutation, compose } from "react-apollo";
+import { connect } from "react-redux";
 
 import { withTheme } from "../../contexts/ThemeContext";
 import { Button } from "../../components/common";
@@ -15,7 +15,7 @@ class MessageInput extends Component {
   };
 
   send = createMessage => {
-    const { groupId, userId, ITEMS_PER_PAGE } = this.props;
+    const { groupId, AuthReducer } = this.props;
     const { text } = this.state;
 
     this.textInput.clear();
@@ -25,7 +25,7 @@ class MessageInput extends Component {
       variables: {
         message: text,
         groupId: groupId,
-        userId: userId
+        userId: AuthReducer.id
       },
       // Fake data in our cache before waiting a response from grapbql-external-api
       optimisticResponse: {
@@ -37,7 +37,7 @@ class MessageInput extends Component {
           createdAt: new Date().toISOString(), // the time is now!
           from: {
             __typename: "User",
-            id: userId,
+            id: AuthReducer.id,
             username: "Max" // still faking the user
           },
           to: {
@@ -52,8 +52,7 @@ class MessageInput extends Component {
         groupData = store.readQuery({
           query: CHAT_GROUP_QUERY,
           variables: {
-            groupId: groupId,
-            first: ITEMS_PER_PAGE
+            groupId: groupId
           }
         });
 
@@ -146,4 +145,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default withTheme(MessageInput);
+const mapStateToProps = ({ AuthReducer }) => ({
+  AuthReducer
+});
+
+export default compose(
+  connect(mapStateToProps),
+  withTheme
+)(MessageInput);

@@ -46,7 +46,7 @@ const server = new ApolloServer({
     onConnect(connectionParams, websocket, wsContext) {
       // First, onConnect will use jsonwebtoken to verify and decode connectionParams.jwt to extract a User from the database.
       // It will do this work within a new Promise called user.
-
+      //
       // this could be refactored, did this to work with graphql interface and client...
       let formattedJWT = "";
       if (connectionParams.Authorization) {
@@ -54,6 +54,8 @@ const server = new ApolloServer({
       } else if (connectionParams.jwt) {
         formattedJWT = connectionParams.jwt;
       }
+
+      console.log("formattedJWT", formattedJWT);
 
       const userPromise = new Promise((res, rej) => {
         if (formattedJWT) {
