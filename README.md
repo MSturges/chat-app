@@ -1,7 +1,6 @@
 react-native chat application with apollo-server backend.
 
 Cool Features:
-- Relay Pagination for chat messages
 - Subscriptions for real time chat feed
 - Group chat rooms
 
