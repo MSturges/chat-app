@@ -1,9 +1,10 @@
-import { _ } from "lodash";
-import { FlatList, StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import React, { Component } from "react";
+import { FlatList, StyleSheet, View, KeyboardAvoidingView } from "react-native";
+import { _ } from "lodash";
 import randomColor from "randomcolor";
+import { connect } from "react-redux";
+import { compose } from "react-apollo";
 
-import { withAuth } from "../../contexts/AuthContext";
 import { withTheme } from "../../contexts/ThemeContext";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
@@ -17,6 +18,7 @@ class MessengerView extends Component {
         usernameColors[user.username] = randomColor();
       });
     }
+    console.log("usernameColors", usernameColors);
     this.state = {
       usernameColors,
       refreshing: false
@@ -33,6 +35,7 @@ class MessengerView extends Component {
     if (nextProps.chatGroup) {
       if (nextProps.chatGroup.users) {
         // apply a color to each user
+        console.log("nextProps.chatGroup.users", nextProps.chatGroup.users);
         nextProps.chatGroup.users.forEach(user => {
           usernameColors[user.username] =
             this.state.usernameColors[user.username] || randomColor();
@@ -48,7 +51,7 @@ class MessengerView extends Component {
     return (
       <Message
         color={this.state.usernameColors[item.from.username]}
-        isCurrentUser={item.from.id == this.props.auth.id} // for now until we implement auth
+        isCurrentUser={item.from.id == this.props.AuthReducer.id} // for now until we implement auth
         message={item}
       />
     );
@@ -76,7 +79,7 @@ class MessengerView extends Component {
   // };
 
   render() {
-    const { theme, chatGroup, ITEMS_PER_PAGE } = this.props;
+    const { theme, chatGroup } = this.props;
     const s = styles(theme);
     return (
       <KeyboardAvoidingView
@@ -96,10 +99,8 @@ class MessengerView extends Component {
         />
         <MessageInput
           groupId={chatGroup.id}
-          userId={this.props.auth.id}
           flatListRef={this.flatList}
           scrollToBottomOfMessagesList={this.scrollToBottomOfMessagesList}
-          ITEMS_PER_PAGE={ITEMS_PER_PAGE}
         />
       </KeyboardAvoidingView>
     );
@@ -116,4 +117,11 @@ const styles = theme =>
     }
   });
 
-export default withTheme(withAuth(MessengerView));
+const mapStateToProps = ({ AuthReducer }) => ({
+  AuthReducer
+});
+
+export default compose(
+  connect(mapStateToProps),
+  withTheme
+)(MessengerView);

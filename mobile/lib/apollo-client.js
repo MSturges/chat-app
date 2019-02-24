@@ -1,17 +1,69 @@
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
 import { SubscriptionClient } from "subscriptions-transport-ws";
-import { onError } from "apollo-link-error";
 import { ApolloClient } from "apollo-client";
 import { AsyncStorage } from "react-native";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
+import { createStore, applyMiddleware } from "redux";
+import { apolloReducer } from "apollo-cache-redux";
+import { persistStore, persistCombineReducers } from "redux-persist";
+import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
+
+import ReduxLink from "apollo-link-redux";
+import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
 import { setContext } from "apollo-link-context";
-import _ from "lodash";
+// import _ from "lodash";
+
+import AuthReducer from "../reducers/AuthReducer";
+import { logout } from "../actions/AuthActions";
 
 const URL = "localhost:8080";
+
+// redux
+const config = {
+  key: "root",
+  storage: AsyncStorage,
+  blacklist: ["apollo"] // don't persist nav for now
+};
+
+const reducer = persistCombineReducers(config, {
+  apollo: apolloReducer,
+  AuthReducer
+});
+
+export const store = createStore(
+  reducer,
+  {}, // initial state
+  composeWithDevTools(applyMiddleware(thunk))
+);
+
+// persistent storage, used in app
+export const persistor = persistStore(store);
+
+// TODO use Redux instead.
+// const cache = new ReduxCache({ store });
+const cache = new InMemoryCache();
+
+const reduxLink = new ReduxLink(store);
+
+// ==========================================
+
+// middleware for requests
+const middlewareLink = setContext((req, previousContext) => {
+  // get the authentication token from local storage if it exists
+  const { jwt } = store.getState().AuthReducer;
+  if (jwt) {
+    return {
+      headers: {
+        authorization: `Bearer ${jwt}`
+      }
+    };
+  }
+});
 
 // afterware for responses
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -26,22 +78,14 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     });
 
     if (shouldLogout) {
-      // we may need to use redux or some sort of state manager...needs refactor
-      AsyncStorage.setItem("user", JSON.stringify(user))
-        .then(res => console.log("res", res))
-        .catch(err => {
-          console.log("err", err);
-        });
-      wsClient.unsubscribeAll(); // unsubscribe from all subscriptions
-      wsClient.close(); // close the WebSocket connection
+      store.dispatch(logout());
     }
   }
   if (networkError) {
     console.log("[Network error]:");
     console.log({ networkError });
     if (networkError.statusCode === 401) {
-      // we may need to use redux or some sort of application state manager...needs refactor
-      // logout();
+      logout();
     }
   }
 });
@@ -50,25 +94,18 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 export const wsClient = new SubscriptionClient(`ws://${URL}/graphql`, {
   lazy: true,
   reconnect: true,
-  // we may need to use redux or some sort of application state manager...needs refactor
   connectionParams() {
-    // get the authentication token from local storage if it exists
-    return AsyncStorage.getItem("user").then(res => {
-      if (res) {
-        const user = JSON.parse(res);
-        if (user.jwt) {
-          return { jwt: user.jwt };
-        }
-      }
-    });
+    return { Authorization: `bearer ${store.getState().AuthReducer.jwt}` };
   }
 });
 
+// used for subscriptions
+const webSocketLink = new WebSocketLink(wsClient);
+
+// used for queries and mutations
 const httpLink = new HttpLink({
   uri: `http://${URL}`
 });
-
-const webSocketLink = new WebSocketLink(wsClient);
 
 const requestLink = ({ queryOrMutationLink, subscriptionLink }) =>
   ApolloLink.split(
@@ -81,26 +118,9 @@ const requestLink = ({ queryOrMutationLink, subscriptionLink }) =>
     queryOrMutationLink
   );
 
-// middleware for requests
-const middlewareLink = setContext((req, previousContext) => {
-  // get the authentication token from local storage if it exists
-  return AsyncStorage.getItem("user").then(res => {
-    if (res) {
-      const user = JSON.parse(res);
-      if (user.jwt) {
-        return {
-          headers: {
-            authorization: `Bearer ${user.jwt}`
-          }
-        };
-      }
-      return previousContext;
-    }
-    return previousContext;
-  });
-});
-
 const link = ApolloLink.from([
+  //afterwear
+  reduxLink,
   errorLink,
   requestLink({
     queryOrMutationLink: middlewareLink.concat(httpLink),
@@ -109,7 +129,6 @@ const link = ApolloLink.from([
 ]);
 
 export const client = new ApolloClient({
-  link: link,
-  cache: new InMemoryCache(),
-  connectToDevTools: true
+  link,
+  cache
 });

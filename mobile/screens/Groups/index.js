@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { StyleSheet, ActivityIndicator, View, Text } from "react-native";
-import { Query } from "react-apollo";
+import { Query, compose } from "react-apollo";
+import { connect } from "react-redux";
 
 import { withTheme } from "../../contexts/ThemeContext";
-import { withAuth } from "../../contexts/AuthContext";
 import Layout from "../../components/Layout";
 import GroupList from "./GroupList";
 import USER_QUERY from "../../graphql/queries/user-query";
@@ -12,8 +12,8 @@ class Groups extends Component {
   keyExtractor = item => item.id.toString();
 
   render() {
+    const { id } = this.props.AuthReducer;
     const s = styles(this.props.theme);
-    const { id } = this.props.auth;
 
     return (
       <Query query={USER_QUERY} variables={{ userId: id }} skip={!id}>
@@ -60,4 +60,11 @@ const styles = theme =>
     }
   });
 
-export default withTheme(withAuth(Groups));
+const mapStateToProps = ({ AuthReducer }) => ({
+  AuthReducer
+});
+
+export default compose(
+  connect(mapStateToProps),
+  withTheme
+)(Groups);

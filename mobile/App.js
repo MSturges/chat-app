@@ -1,20 +1,23 @@
 import React, { Component } from "react";
 import { ApolloProvider } from "react-apollo";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/lib/integration/react";
 
-import { client } from "./lib/apollo-client";
+import { client, persistor, store } from "./lib/apollo-client";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import { AuthProvider } from "./contexts/AuthContext";
 import AppNavigator from "./navigation/AppNavigator";
 
 class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <ThemeProvider>
-          <AuthProvider>
-            <AppNavigator />
-          </AuthProvider>
-        </ThemeProvider>
+        <Provider store={store}>
+          <PersistGate persistor={persistor}>
+            <ThemeProvider>
+              <AppNavigator />
+            </ThemeProvider>
+          </PersistGate>
+        </Provider>
       </ApolloProvider>
     );
   }
